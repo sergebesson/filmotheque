@@ -1,0 +1,15 @@
+{
+	"server" : {
+		"port": 3000
+	},
+	"storage": {
+		"films": "data/films",
+		"filmotheque": "data"
+	},
+	"logs": {
+		"file": "data/filmotheque.log",
+		"max_size": 102400,
+		"max_files": 5,
+		"level": "debug"
+	}
+}

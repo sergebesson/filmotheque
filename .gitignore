@@ -1,3 +1,6 @@
+# Perso
+data/filmotheque\.*
+
 # Logs
 logs
 *.log

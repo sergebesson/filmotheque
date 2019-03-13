@@ -1,0 +1,36 @@
+{
+  "name": "sb-filmotheque",
+  "version": "1.0.0",
+  "description": "Présentation de mes films",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "lint": "eslint '*.js' '**/*.js'",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergebesson/sb-filmotheque.git"
+  },
+  "author": "Serge BESSON <serge@famille-besson.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/sergebesson/sb-filmotheque/issues"
+  },
+  "homepage": "https://github.com/sergebesson/sb-filmotheque#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "sb-collection-file": "^0.2.2",
+    "sb-configuration-loader": "^1.0.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.2",
+    "eslint-plugin-node": "^8.0.1"
+  },
+  "engines": {
+    "node": ">=10.1.0"
+  }
+}
