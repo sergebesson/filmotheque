@@ -1,10 +1,18 @@
 {
-	"server" : {
-		"port": 3000
-	},
 	"storage": {
-		"films": "data/films",
-		"filmotheque": "data"
+		"usersFile": "data/users.json",
+		"moviesDirectory": "data/films",
+		"databaseDirectory": "data"
+	},
+	"server" : {
+		"port": 8080,
+		"host": "localhost",
+		"url_server": "filmotheque.famille-besson.com",
+		"ssl": {
+			"enable": false,
+			"certFile": "data/ssl/filmotheque.crt",
+			"keyFile": "data/ssl/filmotheque.key"
+		}
 	},
 	"logs": {
 		"file": "data/filmotheque.log",

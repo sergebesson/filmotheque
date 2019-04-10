@@ -3,16 +3,20 @@
 const _ = require("lodash");
 const path = require("path");
 const fs = require("fs").promises;
+const { markdown } = require("markdown");
+
 const { CollectionFile } = require("sb-collection-file");
+const { version } = require("../package.json");
 
 class Filmotheque {
 	constructor(directory, logger) {
+		this.directory = directory;
 		this.logger = logger;
 		this.filmothequeJsonSchema = {
 			type: "object",
 			properties: {
 				_id: { type: "string" },
-				name: { type: "string" },
+				title: { type: "string" },
 				fileName: { type: "string" },
 				dateAdded: { type: "string", format: "date-time" },
 				idTheMovieDb: { type: "string" },
@@ -21,7 +25,7 @@ class Filmotheque {
 				size: { type: "integer" },
 			},
 			additionalProperties: false,
-			required: [ "_id", "name", "fileName", "dateAdded", "size" ],
+			required: [ "_id", "title", "fileName", "dateAdded", "size" ],
 		};
 
 		this.collectionFile = new CollectionFile(path.join(directory, "filmotheque"));
@@ -36,14 +40,14 @@ class Filmotheque {
 				return Promise.all(_.map(fileNames, (fileName) => {
 					return fs.stat(path.join(directory, fileName))
 						.then((fileStat) => {
-							const [ , name, , ids ] = regExt.exec(fileName);
+							const [ , title, , ids ] = regExt.exec(fileName);
 							const [ , idTheMovieDb ] = ids.split("@");
 							const [ , idAlloCine ] = ids.split("#");
 							const [ , idImdb ] = ids.split("$");
 							return {
-								name,
+								title,
 								fileName,
-								dateAdded: fileStat.birthtime.toISOString(),
+								dateAdded: fileStat.mtime.toISOString(),
 								idTheMovieDb,
 								idAlloCine,
 								idImdb,
@@ -62,8 +66,27 @@ class Filmotheque {
 			});
 	}
 
+	infos() {
+		const infos = { version };
+		const flashFileName = path.join(this.directory, "flash.md");
+		this.logger.log("debug", "Filmotheque::infos", { flashFileName });
+		return fs.access(flashFileName)
+			.then(() => fs.readFile(flashFileName, "utf8"))
+			.then((flashMarkdown) => _.assign(
+				infos, { flash: markdown.toHTML(flashMarkdown) }
+			))
+			.catch((error) => {
+				this.logger.log("info", "infos", { error: error.message });
+				return infos;
+			});
+	}
+
 	find(query) {
 		return this.collectionFile.find(query);
+	}
+
+	get(id) {
+		return this.collectionFile.getById(id);
 	}
 }
 

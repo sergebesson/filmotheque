@@ -1,0 +1,56 @@
+
+.content {
+	margin: 30px;
+}
+
+.md-list.md-dense {
+	padding-top: 10px;
+	padding-bottom: 0px;
+}
+
+.md-subheader {
+	min-height: auto;
+}
+
+.md-list-item {
+	margin-left: 16px;
+}
+
+.md-list-item-content {
+	min-height: 50px !important;
+}
+
+.md-list-item-button:hover {
+	background-color: rgba(139, 69, 19, 0.20) !important;
+}
+
+.md-list-action {
+	padding-right: 10px;
+}
+
+.md-button {
+	margin: 0 -10px 0 0;
+}
+
+.titre {
+	color: saddlebrown;
+	font-weight: bolder;
+}
+
+.file {
+	font-size-adjust: 0.4;
+}
+
+.md-dialog {
+	border-radius: 15px;
+}
+
+.md-dialog.flash {
+	background-color: saddlebrown;
+	color: #dddddd;
+}
+
+.md-dialog-title {
+	padding: 12px 24px;
+	border-bottom: 1px solid #dddddd;
+}
