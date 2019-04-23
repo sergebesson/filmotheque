@@ -20,14 +20,20 @@
   },
   "homepage": "https://github.com/sergebesson/sb-filmotheque#readme",
   "dependencies": {
+    "byte-size": "^5.0.1",
     "express": "^4.16.4",
+    "express-basic-auth": "^1.1.6",
     "lodash": "^4.17.11",
+    "markdown": "^0.5.0",
+    "moment": "^2.24.0",
     "sb-collection-file": "^0.2.2",
     "sb-configuration-loader": "^1.0.0",
+    "vue": "^2.6.10",
+    "vue-material": "^1.0.0-beta-10.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "eslint": "^5.15.2",
+    "eslint": "^5.16.0",
     "eslint-plugin-node": "^8.0.1"
   },
   "engines": {

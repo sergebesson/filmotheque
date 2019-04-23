@@ -133,7 +133,7 @@ module.exports = {
 		"id-blacklist": "off",
 		"id-length": ["warn", {
 			min: 3,
-			exceptions: ["$q", "id", "x", "y", "_", "me", "to", "i", "j", "k", "on", "qs", "vm", "fs"],
+			exceptions: ["$q", "id", "x", "y", "_", "me", "to", "i", "j", "k", "on", "qs", "vm", "fs", "el"],
 		}],
 		"id-match": "off",
 		indent: ["warn", "tab", {SwitchCase: 1, MemberExpression: 1, FunctionDeclaration: {body: 1, parameters: 2}, FunctionExpression: {body: 1, parameters: 2}}],

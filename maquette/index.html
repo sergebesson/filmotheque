@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+  <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+  <link rel="stylesheet" href="./loader.css">
+
+  <style type="text/css">
+    .content {
+      margin: 30px;
+    }
+
+    .md-list.md-dense {
+      padding-top: 10px;
+      padding-bottom: 0px;
+    }
+
+    .md-subheader {
+      min-height: auto;
+    }
+
+    .md-list-item {
+      margin-left: 16px;
+    }
+    .md-list-item-content {
+      min-height: 50px !important;
+    }
+    .md-list-item-button:hover {
+      background-color: rgba(139, 69, 19, 0.20) !important;
+    }
+
+    .md-list-action {
+      padding-right: 10px;
+    }
+    .md-button {
+      margin: 0 -10px 0 0;
+    }
+
+    .titre {
+      color: saddlebrown;
+      font-weight: bolder;
+    }
+
+    .size {
+      font-size-adjust: 0.4;
+    }
+
+    .md-progress-spinner-circle  {
+      stroke: saddlebrown !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loader">
+    <div class="loader">
+      <div>Chargement en cours ...</div>
+      <div class="escapingBallG"><div></div></div>
+    </div>
+  </div>
+  <div id="app">
+  </div>
+
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/vue-material@beta"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+  <script>
+    Vue.use(VueMaterial.default)
+
+    Vue.component("loader", {
+      template: "#loader"
+    })
+
+    Vue.component("filmItem", {
+      props: ["film"],
+      template: `
+        <div>
+          <md-list-item @click="$emit('download', film)">
+            <div class="md-list-item-text">
+              <span class="titre">{{ film.title }}</span>
+              <span class="size">{{ film.fileName }} - {{ film.size }}mo</span>
+            </div>
+
+            <div class="md-list-action">
+              <md-button class="md-icon-button" @click.stop="$emit('open', 'themoviedb', film)">
+                <img src="themoviedb.png" />
+              </md-button>
+              <md-button class="md-icon-button" @click.stop="$emit('open', 'allocine', film)">
+                <img src="allocine.ico" />
+              </md-button>
+              <md-button class="md-icon-button" @click.stop="$emit('open' ,'imdb', film)">
+                <img src="imdb.ico" />
+              </md-button>
+            </div>
+          </md-list-item>
+          <md-divider />
+        </div>
+      `
+    })
+
+    Vue.component("listFilmsByGroup", {
+      props: ["groupFilms"],
+      methods: {
+        test: function (film) {
+          window.alert(`download ${ film.id }`);
+        },
+        open: function(site, film) {
+          window.alert(`open : ${ site } avec le film ${ film.id }`);
+       }
+      },
+      template:`
+        <md-list class="md-double-line md-elevation-10 md-dense">
+          <div v-for="(films, groupId) in groupFilms">
+            <md-subheader>{{ groupId }}</md-subheader>
+            <film-item v-for="film in films"
+              :key="film.id"
+              :film="film"
+              @download="test"
+              @open="open"
+            />
+          </div>
+        </md-list>
+      `
+    })
+
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        films: {},
+        ready: false,
+      },
+      created: function() {
+        setTimeout(() => {
+          this.films = {
+            "26/03/2019" : [{
+                id: 1,
+                title: "Voyage au centre de la Terre 2 - L'île mystérieuse",
+                fileName: "Voyage au centre de la Terre 2 - L'île mystérieuse (02-12) AveActFan Dvdrip #144687# @72545@.avi",
+                size: 700
+              }, {
+                id: 2,
+                title: "Voyage au centre de la Terre 1 - L'île mystérieuse",
+                fileName: "Voyage au centre de la Terre 1 - L'île mystérieuse (02-12) AveActFan Dvdrip #144687# @72545@.avi",
+                size: 650
+            }],
+            "27/03/2019" : [{
+                id: 4,
+                title: "Voyage au centre de la Terre 4 - L'île mystérieuse",
+                fileName: "Voyage au centre de la Terre 4 - L'île mystérieuse (02-12) AveActFan Dvdrip #144687# @72545@.avi",
+                size: 654
+              }, {
+                id: 5,
+                title: "Voyage au centre de la Terre 5 - L'île mystérieuse",
+                fileName: "Voyage au centre de la Terre 5 - L'île mystérieuse (02-12) AveActFan Dvdrip #144687# @72545@.avi",
+                size: 705
+            }]
+          };
+          this.ready = true;
+        }, 2000)
+      },
+      mounted: function() {
+        const loader = document.getElementById("loader");
+        loader.parentNode.removeChild(loader);
+      },
+      template:  `
+      <div class="content" v-if="ready">
+        <list-films-by-group :group-films="films"/>
+      </div>
+      <loader v-else/>
+      `
+    })
+  </script>
+</body>
+
+</html>

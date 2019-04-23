@@ -1,48 +1,48 @@
 "use strict";
 
-const _ = require("lodash");
 const path = require("path");
 const { ConfigLoader } = require("sb-configuration-loader");
 
 class LoadConfiguration {
 	constructor(configurationFile) {
-		this.file = LoadConfiguration
-			.updateRelativeStorage(configurationFile || "data/configuration.json");
-	}
-
-	static updateRelativeStorage(directory) {
-		return directory.startsWith("/") ? directory : path.join(__dirname, "..", directory);
+		this.file = configurationFile;
 	}
 
 	load() {
 		const configLoader = new ConfigLoader();
-		return configLoader.load([ {
+		const layers = [ {
 			type: "file",
-			file: this.file,
-		}, {
+			file: path.join(__dirname, "../data/configuration.json"),
+		} ];
+		if (this.file) {
+			layers.push({
+				type: "file",
+				file: this.file,
+			});
+		}
+		layers.push({
 			type: "environment",
 			mapping: {
 				PORT: "server.port",
-				DIR_FILMS: "storage.films",
-				DIR_FILMOTHEQUE: "storage.filmotheque",
+				HOST: "server.host",
+				URL_SERVER: "server.url_server",
+				SSL_ENABLE: "server.ssl.enable",
+				MOVIES_DIR: "storage.moviesDirectory",
+				DB_DIR: "storage.databaseDirectory",
 				LOGS_LEVEL: "logs.level",
+				LOGS_FILE: "logs.file",
 			},
-		} ]).then(() => {
-			if (configLoader.hasLayersInError()) {
-				const error = new Error("Le chargement de la configuration à rencontrer une erreur");
-				error.cause = configLoader.getLayersInError();
-				return Promise.reject(error);
-			}
-
-			_.forEach(configLoader.config.storage,
-				(directory, key) => {
-					configLoader.config.storage[key] =
-						LoadConfiguration.updateRelativeStorage(directory);
-				}
-			);
-
-			return configLoader;
 		});
+		return configLoader.load(layers)
+			.then(() => {
+				if (configLoader.hasLayersInError()) {
+					const error = new Error("Le chargement de la configuration à rencontrer une erreur");
+					error.cause = configLoader.getLayersInError();
+					return Promise.reject(error);
+				}
+
+				return configLoader;
+			});
 	}
 }
 
