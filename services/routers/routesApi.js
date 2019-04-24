@@ -34,35 +34,35 @@ module.exports = ({ configLoader, logger }) => {
 			.catch(next);
 	});
 
-	router.get("/films", function (request, response, next) {
+	router.get("/movies", function (request, response, next) {
 		if (request.query.group_by && request.query.group_by !== "dateAdded") {
 			return next(new Error("invalid_group_by"));
 		}
 
 		return filmotheque.find(request.query.filter)
-			.then((films) => {
-				const responseFilms = request.query.group_by === "dateAdded" ?
-					_.chain(films)
+			.then((movies) => {
+				const moviesResult = request.query.group_by === "dateAdded" ?
+					_.chain(movies)
 						.sortBy("dateAdded")
 						.reverse()
-						.groupBy((film) => moment(film.dateAdded).set({
+						.groupBy((movie) => moment(movie.dateAdded).set({
 							hour: 0, minute: 0, second: 0, millisecond: 0,
 						}).toISOString())
 						.value() :
-					films;
-				response.status(200).send(responseFilms);
+					movies;
+				response.status(200).send(moviesResult);
 			})
 			.catch(next);
 	});
 
 	router.get("/download/:id", function (request, response, next) {
 		filmotheque.get(request.params.id)
-			.then((film) => {
-				if (!film) {
+			.then((movie) => {
+				if (!movie) {
 					return next();
 				}
 				response.download(
-					path.join(configLoader.getValue("storage.moviesDirectory"), film.fileName)
+					path.join(configLoader.getValue("storage.moviesDirectory"), movie.fileName)
 				);
 			})
 			.catch(next);

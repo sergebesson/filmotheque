@@ -28,6 +28,6 @@ Les fonctionnalités en cours de développement sont :
   * Changement mot de passe
   * Changement du pseudo
   * Statistique de téléchargement
-* Mise en place d'un API documentée.
+* Mise en place d'une API documentée.
 
 Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
