@@ -34,7 +34,7 @@ class Server {
 	}
 
 	start() {
-		this.server = this.configuration.ssl.enable === true ?
+		this.server = this.configuration.ssl.enable ?
 			https.createServer({
 				/* eslint-disable-next-line no-sync */
 				key: fs.readFileSync(this.configuration.ssl.keyFile),

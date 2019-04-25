@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require("lodash");
 const path = require("path");
 const { ConfigLoader } = require("sb-configuration-loader");
 
@@ -40,6 +41,18 @@ class LoadConfiguration {
 					error.cause = configLoader.getLayersInError();
 					return Promise.reject(error);
 				}
+
+				/* Gestion de server.ssl.enable */
+				const sslEnable = configLoader.getValue("server.ssl.enable");
+				_.set(configLoader.config, "server.ssl.enable",
+					sslEnable && (
+						sslEnable === true ||
+						sslEnable === "true" ||
+						sslEnable === "TRUE" ||
+						sslEnable === 1 ||
+						sslEnable === "1"
+					)
+				);
 
 				return configLoader;
 			});
