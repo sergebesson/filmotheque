@@ -1,0 +1,46 @@
+
+.list-movies .md-list.md-dense {
+	margin: 30px;
+	padding-top: 10px;
+	padding-bottom: 0px;
+}
+
+.list-movies .md-subheader {
+	min-height: auto;
+}
+
+.list-movies .md-list-item {
+	margin-left: 16px;
+}
+
+.list-movies .md-list-item-content {
+	min-height: 50px !important;
+}
+
+.list-movies .md-list-item-button:hover {
+	background-color: rgba(139, 69, 19, 0.20) !important;
+}
+
+.list-movies .md-list-action {
+	padding-right: 10px;
+}
+
+.list-movies .md-button {
+	margin: 0 -10px 0 0;
+}
+
+.list-movies .titre {
+	color: saddlebrown;
+	font-weight: bolder;
+}
+
+.list-movies .file {
+	font-size-adjust: 0.4;
+}
+
+.list-movies .empty {
+	font-size: 2em;
+	font-weight: bolder;
+	color: saddlebrown;
+	margin: 30px;
+}

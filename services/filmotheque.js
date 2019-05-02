@@ -59,7 +59,7 @@ class Filmotheque {
 							this.logger.log("warn", `films ${ fileName } en erreur: ${ error.message}`);
 						});
 				}))
-					.then((films) => this.collectionFile.import(_.compact(films)))
+					.then((movies) => this.collectionFile.import(_.compact(movies)))
 					.then((resultImport) => {
 						return _.assign({ badFiles }, resultImport);
 					});

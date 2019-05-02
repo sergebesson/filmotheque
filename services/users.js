@@ -6,7 +6,7 @@ class Users {
 	static get authorizedRoutes() {
 		return [
 			"/infos",
-			"/films",
+			"/movies",
 			"/download",
 		];
 	}
