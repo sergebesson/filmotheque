@@ -12,6 +12,7 @@ const vm = new Vue({
 	methods: {
 		onError: function (message, error) {
 			this.$refs.error.showError(message, error);
+			this.ready = true;
 		},
 	},
 	template: `
@@ -20,7 +21,7 @@ const vm = new Vue({
 			<loader v-if="!ready" />
 			<error ref="error" />
 
-			<list-movies-by-group @error="onError" @loaded="ready=true" />
+			<list-movies-by-group @error="onError" v-show="ready" @loaded="ready=true" />
 			<flash @error="onError" />
 
 		</div>

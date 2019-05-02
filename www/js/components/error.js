@@ -1,5 +1,5 @@
 "use strict";
-/* global Vue */
+/* global Vue,_ */
 
 Vue.component("error", {
 	data: function () {
@@ -11,7 +11,7 @@ Vue.component("error", {
 	},
 	computed: {
 		content: function () {
-			return `${ this.message } ${ this.error ? `<span>${this.error.message}</span>` : "" }`;
+			return `${ this.message } <span>${ this.errorDescription }</span>`;
 		},
 	},
 	methods: {
@@ -21,12 +21,14 @@ Vue.component("error", {
 			}
 
 			this.message = message;
-			this.error = error;
+			const errorMessage = _.get(error, "message");
+			const errorDescription = _.get(error, "response.data.error_description");
+			this.errorDescription = `${ errorMessage }${ errorDescription ? ` (${errorDescription})` : "" }`;
 			this.show = true;
 		},
 	},
 	template: `
-		<md-dialog-alert
+		<md-dialog-alert class="error"
 			:md-active.sync="show"
 			md-title="ERREUR"
 			:md-content="content"

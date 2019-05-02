@@ -72,18 +72,24 @@ Vue.component("listMoviesByGroup", {
 		},
 	},
 	template: `
-		<div class="content" @scroll="onScroll" v-show="!_.isEmpty(moviesShownByGroup)">
-			<md-list class="md-double-line md-elevation-10 md-dense">
-				<div v-for="(movies, dateAdded) in moviesShownByGroup">
-					<md-subheader>{{ dateAdded | dateAdded }}</md-subheader>
-					<movie-item v-for="movie in _.sortBy(movies, 'title')"
-						:key="movie._id"
-						:movie="movie"
-						@download="download"
-						@open="open"
-					/>
-				</div>
-			</md-list>
-		</div>
+		<transition name="fade">
+			<div class="content list-movies" @scroll="onScroll">
+				<md-list
+					class="md-double-line md-elevation-10 md-dense"
+					v-if="!_.isEmpty(moviesShownByGroup)"
+				>
+					<div v-for="(movies, dateAdded) in moviesShownByGroup">
+						<md-subheader>{{ dateAdded | dateAdded }}</md-subheader>
+						<movie-item v-for="movie in _.sortBy(movies, 'title')"
+							:key="movie._id"
+							:movie="movie"
+							@download="download"
+							@open="open"
+						/>
+					</div>
+				</md-list>
+				<div v-else class="empty">Aucun film</div>
+			</div>
+		</transition>
 	`,
 });

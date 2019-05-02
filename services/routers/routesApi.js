@@ -36,7 +36,9 @@ module.exports = ({ configLoader, logger }) => {
 
 	router.get("/movies", function (request, response, next) {
 		if (request.query.group_by && request.query.group_by !== "dateAdded") {
-			return next(new Error("invalid_group_by"));
+			return response.status(400).send({
+				status: 404, error_description: "invalid_group_by",
+			});
 		}
 
 		return filmotheque.find(request.query.filter)
