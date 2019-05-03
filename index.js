@@ -14,7 +14,8 @@ loadConfiguration.load()
 		logger.log("info", "Configuration", configLoader.config);
 
 		return new Users({ configLoader, logger }).load()
-			.then((users) => new Server({ configLoader, logger, users }).start());
+			.then((users) => new Server(
+				{ configLoader, logger, users: _.mapValues(users, "passwd") }).start());
 
 	})
 	.catch((error) => {

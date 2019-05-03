@@ -1,4 +1,8 @@
 {
-	"serge": "mdp",
-	"other": "passwd"
+	"serge": {
+		"passwd": "mdp"
+	},
+	"other": {
+		"passwd": "passwd"
+	}
 }
