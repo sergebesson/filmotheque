@@ -6,8 +6,8 @@ const express = require("express");
 const fs = require("fs");
 const expressBasicAuth = require("express-basic-auth");
 
-const routeStatic = require("./routers/routesStatic.js");
-const routeApiFactory = require("./routers/routesApi.js");
+const staticRoutes = require("./routers/static.js");
+const apiRoutesFactory = require("./routers/api.js");
 
 class Server {
 
@@ -15,7 +15,7 @@ class Server {
 		this.logger = logger;
 		this.configuration = configLoader.getValue("server");
 
-		const routeApi = routeApiFactory({ configLoader, logger });
+		const routeApi = apiRoutesFactory({ configLoader, logger });
 
 		this.app = express();
 
@@ -24,7 +24,7 @@ class Server {
 
 		this.app.use(expressBasicAuth({ users, challenge: true }));
 
-		this.app.use(routeStatic);
+		this.app.use(staticRoutes);
 		this.app.use("/api", routeApi);
 
 		// Route d'erreur

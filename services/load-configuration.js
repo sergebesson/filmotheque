@@ -30,6 +30,7 @@ class LoadConfiguration {
 				SSL_ENABLE: "server.ssl.enable",
 				MOVIES_DIR: "storage.moviesDirectory",
 				DB_DIR: "storage.databaseDirectory",
+				USER_FILE: "storage.usersFile",
 				LOGS_LEVEL: "logs.level",
 				LOGS_FILE: "logs.file",
 			},
