@@ -32,7 +32,7 @@ class Filmotheque {
 	}
 
 	initialize(directory) {
-		this.collectionFile.create({ jsonSchema: this.filmothequeJsonSchema });		// const regExt = /(\S.*\S)\s*\(\d\d-\d\d\).+@(\d+)/;
+		this.collectionFile.create({ jsonSchema: this.filmothequeJsonSchema });
 		const regExt = /\s*(.*\S)\s*(\(\d\d-\d\d\)|\(\d{4}\))\s*(.+)/;
 		return fs.readdir(directory)
 			.then((fileNames) => {
@@ -68,7 +68,7 @@ class Filmotheque {
 
 	infos() {
 		const infos = { version };
-		const flashFileName = path.join(this.directory, "flash.md");
+		const flashFileName = path.join(__dirname, "../data/flash.md");
 		this.logger.log("debug", "Filmotheque::infos", { flashFileName });
 		return fs.access(flashFileName)
 			.then(() => fs.readFile(flashFileName, "utf8"))
