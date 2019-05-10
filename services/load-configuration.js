@@ -6,7 +6,7 @@ const { ConfigLoader } = require("sb-configuration-loader");
 
 class LoadConfiguration {
 	constructor(configurationFile) {
-		this.file = configurationFile.startsWith("/") ?
+		this.file = !configurationFile || configurationFile.startsWith("/") ?
 			configurationFile :
 			path.join(process.cwd(), configurationFile);
 	}
