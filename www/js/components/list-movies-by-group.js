@@ -28,21 +28,21 @@ Vue.component("listMoviesByGroup", {
 			})
 				.then(({ data }) => {
 					this.moviesByGroup = data;
-					this.listDateAddedNotShown = _.keys(this.moviesByGroup);
+					this.listDateAddedNotShow = _.keys(this.moviesByGroup);
 					this.updateList();
 				});
 		},
 		onScroll: function (event) {
 			const target = event.target;
-			if ((target.offsetHeight + target.scrollTop) === target.scrollHeight) {
+			if ((target.offsetHeight + target.scrollTop) >= target.scrollHeight) {
 				this.updateList();
 			}
 		},
 		updateList: function () {
 			let nbMovies = 0;
-			this.listDateAddedNotShown.some((group) => {
+			this.listDateAddedNotShow.some((group) => {
 				this.$set(this.moviesShownByGroup, group, this.moviesByGroup[group]);
-				this.listDateAddedNotShown = this.listDateAddedNotShown.slice(1);
+				this.listDateAddedNotShow = this.listDateAddedNotShow.slice(1);
 				nbMovies += this.moviesByGroup[group].length;
 				return nbMovies >= 30;
 			});
