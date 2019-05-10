@@ -11,11 +11,12 @@ const apiRoutesFactory = require("./routers/api.js");
 
 class Server {
 
-	constructor({ configLoader, logger, users }) {
+	constructor(context) {
+		const { configLoader, logger, users } = context;
 		this.logger = logger;
 		this.configuration = configLoader.getValue("server");
 
-		const routeApi = apiRoutesFactory({ configLoader, logger });
+		const routeApi = apiRoutesFactory(context);
 
 		this.app = express();
 
@@ -34,6 +35,8 @@ class Server {
 	}
 
 	start() {
+		/* eslint-disable-next-line no-console */
+		console.log(); console.log("Server starting ...");
 		this.server = this.configuration.ssl.enable ?
 			https.createServer({
 				/* eslint-disable-next-line no-sync */
@@ -45,11 +48,16 @@ class Server {
 
 		return new Promise((resolve, reject) => {
 			this.server.on("error", (error) => {
-				this.logger.log("error", `server not start ${error.message}`);
+				const messageError = `impossible server start : ${error.message}`;
+				/* eslint-disable-next-line no-console */
+				console.log(messageError);
+				this.logger.log("error", messageError);
 				reject(error);
 			});
 			this.server.on("listening", () => {
-				this.logger.log("info", `start server with host:port ${
+				/* eslint-disable-next-line no-console */
+				console.log("Server started");
+				this.logger.log("info", `start server to ${
 					this.configuration.host
 				}:${
 					this.configuration.port

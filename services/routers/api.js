@@ -7,11 +7,8 @@ const router = require("express").Router();
 const path = require("path");
 
 const { Users } = require("../users.js");
-const { Filmotheque } = require("../filmotheque.js");
 
-module.exports = ({ configLoader, logger }) => {
-
-	const filmotheque = new Filmotheque(configLoader.getValue("storage.databaseDirectory"), logger);
+module.exports = ({ filmotheque, configLoader, logger }) => {
 
 	router.use(function (request, response, next) {
 		return Users.checkRouteAccessRights(request.auth.user, request.path) ?
@@ -23,7 +20,7 @@ module.exports = ({ configLoader, logger }) => {
 	});
 
 	router.get("/initialize", function (request, response, next) {
-		filmotheque.initialize(configLoader.getValue("storage.moviesDirectory"))
+		filmotheque.importMovies(configLoader.getValue("storage.moviesDirectory"))
 			.then((result) => response.status(200).send(result))
 			.catch(next);
 	});

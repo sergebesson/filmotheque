@@ -1,5 +1,5 @@
 "use strict";
-/* global Vue,axios,localStorage */
+/* global Vue,axios,localStorage,document */
 
 Vue.component("flash", {
 	data: function () {
@@ -22,6 +22,8 @@ Vue.component("flash", {
 				url: "api/infos",
 			})
 				.then(({ data }) => {
+					document.title += ` ${ data.version } - ${ data.nbMovies } films`;
+
 					const lastVersion = localStorage.getItem("last_version") || "0.0.0";
 					if (this.comparedVersion(data.version, lastVersion) > 0 && data.flash) {
 						localStorage.setItem("last_version", data.version);
