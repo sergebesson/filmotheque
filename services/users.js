@@ -1,5 +1,6 @@
 "use strict";
 
+// eslint-disable-next-line node/no-unsupported-features/node-builtins
 const fs = require("fs").promises;
 
 class Users {

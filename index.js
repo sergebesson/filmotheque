@@ -5,18 +5,28 @@ const _ = require("lodash");
 const { LoadConfiguration } = require("./services/load-configuration.js");
 const { Logger } = require("./services/logger.js");
 const { Users } = require("./services/users.js");
+const { Filmotheque } = require("./services/filmotheque.js");
 const { Server } = require("./services/server.js");
 
 const loadConfiguration = new LoadConfiguration(process.argv[2]);
-loadConfiguration.load()
+
+const context = {};
+Promise.resolve()
+	.then(() => loadConfiguration.load())
 	.then((configLoader) => {
 		const logger = new Logger(configLoader.getValue("logs")).getLogger();
 		logger.log("info", "Configuration", configLoader.config);
 
-		return new Users({ configLoader, logger }).load()
-			.then((users) => new Server(
-				{ configLoader, logger, users: _.mapValues(users, "passwd") }).start());
-
+		_.assign(context, { configLoader, logger });
+		return new Users({ configLoader, logger }).load();
+	})
+	.then((usersJson) => {
+		const users = _.mapValues(usersJson, "passwd");
+		const filmotheque = new Filmotheque(
+			context.configLoader.getValue("storage.databaseDirectory"), context.logger
+		);
+		_.assign(context, { users, filmotheque });
+		return new Server(context).start();
 	})
 	.catch((error) => {
 		console.error(error.stack);
