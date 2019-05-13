@@ -26,8 +26,9 @@ Promise.resolve()
 			context.configLoader.getValue("storage.databaseDirectory"), context.logger
 		);
 		_.assign(context, { users, filmotheque });
-		return new Server(context).start();
+		return filmotheque.loadMovies();
 	})
+	.then(() => new Server(context).start())
 	.catch((error) => {
 		console.error(error.stack);
 		if (error.cause) {

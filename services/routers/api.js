@@ -31,40 +31,34 @@ module.exports = ({ filmotheque, configLoader, logger }) => {
 			.catch(next);
 	});
 
-	router.get("/movies", function (request, response, next) {
+	router.get("/movies", function (request, response) {
 		if (request.query.group_by && request.query.group_by !== "dateAdded") {
 			return response.status(400).send({
-				status: 404, error_description: "invalid_group_by",
+				status: 400, error_description: "invalid_group_by",
 			});
 		}
 
-		return filmotheque.find(request.query.filter)
-			.then((movies) => {
-				const moviesResult = request.query.group_by === "dateAdded" ?
-					_.chain(movies)
-						.sortBy("dateAdded")
-						.reverse()
-						.groupBy((movie) => moment(movie.dateAdded).set({
-							hour: 0, minute: 0, second: 0, millisecond: 0,
-						}).toISOString())
-						.value() :
-					movies;
-				response.status(200).send(moviesResult);
-			})
-			.catch(next);
+		const movies = filmotheque.find(request.query.filter);
+		const moviesResult = request.query.group_by === "dateAdded" ?
+			_.chain(movies)
+				.sortBy("dateAdded")
+				.reverse()
+				.groupBy((movie) => moment(movie.dateAdded).set({
+					hour: 0, minute: 0, second: 0, millisecond: 0,
+				}).toISOString())
+				.value() :
+			movies;
+		response.status(200).send(moviesResult);
 	});
 
 	router.get("/download/:id", function (request, response, next) {
-		filmotheque.get(request.params.id)
-			.then((movie) => {
-				if (!movie) {
-					return next();
-				}
-				response.download(
-					path.join(configLoader.getValue("storage.moviesDirectory"), movie.fileName)
-				);
-			})
-			.catch(next);
+		const movie = filmotheque.get(request.params.id);
+		if (!movie) {
+			return next();
+		}
+		response.download(
+			path.join(configLoader.getValue("storage.moviesDirectory"), movie.fileName)
+		);
 	});
 
 	router.use(function (request, response) {

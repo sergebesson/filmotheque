@@ -32,6 +32,10 @@ class Filmotheque {
 		this.collectionFile = new CollectionFile(path.join(directory, "filmotheque"));
 	}
 
+	loadMovies() {
+		return this.collectionFile.loadCollection();
+	}
+
 	importMovies(directory) {
 		this.collectionFile.create({ jsonSchema: this.filmothequeJsonSchema });
 		const regExt = /\s*(.*\S)\s*(\(\d\d-\d\d\)|\(\d{4}\))\s*(.+)/;
@@ -68,29 +72,26 @@ class Filmotheque {
 	}
 
 	infos() {
-		return this.collectionFile.getNbDocuments()
-			.then((nbMovies) => {
-				const infos = { version, nbMovies };
-				const flashFileName = path.join(__dirname, "../data/flash.md");
-				this.logger.log("debug", "Filmotheque::infos", { flashFileName });
-				return fs.access(flashFileName)
-					.then(() => fs.readFile(flashFileName, "utf8"))
-					.then((flashMarkdown) => _.assign(
-						infos, { flash: markdown.toHTML(flashMarkdown) }
-					))
-					.catch((error) => {
-						this.logger.log("info", "infos", { error: error.message });
-						return infos;
-					});
+		const infos = { version, nbMovies: this.collectionFile.collection.length };
+		const flashFileName = path.join(__dirname, "../data/flash.md");
+		this.logger.log("debug", "Filmotheque::infos", { flashFileName });
+		return fs.access(flashFileName)
+			.then(() => fs.readFile(flashFileName, "utf8"))
+			.then((flashMarkdown) => _.assign(
+				infos, { flash: markdown.toHTML(flashMarkdown) }
+			))
+			.catch((error) => {
+				this.logger.log("info", "infos", { error: error.message });
+				return infos;
 			});
 	}
 
 	find(query) {
-		return this.collectionFile.find(query);
+		return this.collectionFile.collection.find(query);
 	}
 
 	get(id) {
-		return this.collectionFile.getById(id);
+		return this.collectionFile.collection.getById(id);
 	}
 }
 
