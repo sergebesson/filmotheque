@@ -21,11 +21,13 @@
   "homepage": "https://github.com/sergebesson/sb-filmotheque#readme",
   "dependencies": {
     "byte-size": "^5.0.1",
+    "escape-string-regexp": "^2.0.0",
     "express": "^4.16.4",
     "express-basic-auth": "^1.2.0",
     "lodash": "^4.17.11",
     "markdown": "^0.5.0",
     "moment": "^2.24.0",
+    "remove-accents": "^0.4.2",
     "sb-collection-file": "^0.4.0",
     "sb-configuration-loader": "^1.0.0",
     "vue": "^2.6.10",

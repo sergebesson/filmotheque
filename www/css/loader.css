@@ -13,7 +13,7 @@
 	padding: 10px;
 	text-align: center;
 	font-size: 26px;
-	color: saddlebrown
+	color: var(--md-theme-default-primary);
 }
 
 .loader .escapingBallG {
@@ -23,7 +23,7 @@
 }
 
 .loader .escapingBallG div {
-	background-color: #8b4513;
+	background-color: var(--md-theme-default-primary);
 	position: absolute;
 	top: 0;
 	left: 0;

@@ -5,6 +5,8 @@ const path = require("path");
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const fs = require("fs").promises;
 const { markdown } = require("markdown");
+const escapeStringRegexp = require("escape-string-regexp");
+const removeAccents = require("remove-accents");
 
 const { CollectionFile } = require("sb-collection-file");
 const { version } = require("../package.json");
@@ -24,6 +26,7 @@ class Filmotheque {
 				idAlloCine: { type: "string" },
 				idImdb: { type: "string" },
 				size: { type: "integer" },
+				_search: { type: "string" },
 			},
 			additionalProperties: false,
 			required: [ "_id", "title", "fileName", "dateAdded", "size" ],
@@ -57,6 +60,7 @@ class Filmotheque {
 								idAlloCine,
 								idImdb,
 								size: fileStat.size,
+								_search: removeAccents(title).toLowerCase(),
 							};
 						})
 						.catch((error) => {
@@ -87,7 +91,19 @@ class Filmotheque {
 	}
 
 	find(query) {
-		return this.collectionFile.collection.find(query);
+		// a étudier : accent-folding
+		if (!query) {
+			return this.collectionFile.collection.find();
+		}
+
+		const filterRegExp = RegExp(
+			escapeStringRegexp(removeAccents(query))
+				.toLowerCase()
+				.replace(/\s+/g, ".*")
+		);
+		return this.collectionFile.collection.find(
+			(movie) => filterRegExp.test(movie._search)
+		);
 	}
 
 	get(id) {

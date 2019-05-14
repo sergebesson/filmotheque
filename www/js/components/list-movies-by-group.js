@@ -5,6 +5,7 @@ Vue.component("listMoviesByGroup", {
 	data: function () {
 		return {
 			moviesShownByGroup: {},
+			search: "",
 		};
 	},
 	filters: {
@@ -21,30 +22,40 @@ Vue.component("listMoviesByGroup", {
 	},
 	methods: {
 		getMovies: function () {
+			const params = { group_by: "dateAdded" };
+			if (this.search !== "") {
+				params.filter = this.search;
+			}
 			return axios({
 				method: "get",
 				url: "api/movies",
-				params: { group_by: "dateAdded" },
+				params,
 			})
 				.then(({ data }) => {
 					this.moviesByGroup = data;
 					this.listDateAddedNotShow = _.keys(this.moviesByGroup);
-					this.updateList();
+					this.moviesShownByGroup = {};
+					this.updateList(100);
 				});
 		},
-		onScroll: function (event) {
+		onScroll: _.throttle(function (event) {
 			const target = event.target;
 			if ((target.offsetHeight + target.scrollTop) >= target.scrollHeight) {
-				this.updateList();
+				// eslint-disable-next-line no-invalid-this
+				this.updateList(30);
 			}
-		},
-		updateList: function () {
+		}, 300),
+		onInput: _.debounce(function () {
+			// eslint-disable-next-line no-invalid-this
+			this.getMovies();
+		}, 500),
+		updateList: function (addMax) {
 			let nbMovies = 0;
 			this.listDateAddedNotShow.some((group) => {
 				this.$set(this.moviesShownByGroup, group, this.moviesByGroup[group]);
 				this.listDateAddedNotShow = this.listDateAddedNotShow.slice(1);
 				nbMovies += this.moviesByGroup[group].length;
-				return nbMovies >= 30;
+				return nbMovies >= addMax;
 			});
 		},
 		download: function (movie) {
@@ -73,22 +84,35 @@ Vue.component("listMoviesByGroup", {
 	},
 	template: `
 		<transition name="fade">
-			<div class="content list-movies" @scroll="onScroll">
-				<md-list
-					class="md-double-line md-elevation-10 md-dense"
-					v-if="!_.isEmpty(moviesShownByGroup)"
-				>
-					<div v-for="(movies, dateAdded) in moviesShownByGroup">
-						<md-subheader>{{ dateAdded | dateAdded }}</md-subheader>
-						<movie-item v-for="movie in _.sortBy(movies, 'title')"
-							:key="movie._id"
-							:movie="movie"
-							@download="download"
-							@open="open"
-						/>
+			<div class="content list-movies">
+				<div class="md-elevation-10">
+					<div class="search">
+						<md-field md-inline>
+							<label>Rechercher...</label>
+							<md-input v-model="search" @input="onInput"></md-input>
+						</md-field>
 					</div>
-				</md-list>
-				<div v-else class="empty">Aucun film</div>
+					<md-list class="md-double-line md-dense" v-if="!_.isEmpty(moviesShownByGroup)" @scroll="onScroll">
+						<transition-group name="list-movies-transition">
+							<div v-for="(movies, dateAdded) in moviesShownByGroup"
+								:key="dateAdded"
+								class="list-movies-transition-item"
+							>
+								<md-subheader>{{ dateAdded | dateAdded }}</md-subheader>
+								<transition-group name="list-movies-transition">
+									<movie-item v-for="movie in _.sortBy(movies, 'title')"
+										:key="movie._id"
+										:movie="movie"
+										@download="download"
+										@open="open"
+										class="list-movies-transition-item"
+									/>
+								</transition>
+							</div>
+						</transition-group>
+					</md-list>
+					<div v-else class="empty">Aucun film</div>
+				</div>
 			</div>
 		</transition>
 	`,

@@ -1,4 +1,11 @@
 
+:root {
+	--sb-filmotheque-over-background: rgba(139, 69, 19, 0.20);
+	--sb-filmotheque-text-light: #dddddd;
+	/* --md-theme-default-primary-on-background: rgb(255, 193, 148); */
+	--md-theme-default-primary: saddlebrown;
+}
+
 body {
 	height: 100%;
 }
@@ -14,7 +21,7 @@ body {
 
 .md-dialog-title {
 	padding: 12px 24px;
-	border-bottom: 1px solid #dddddd;
+	border-bottom: 1px solid var(--sb-filmotheque-text-light);
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -31,11 +38,11 @@ body {
 .md-dialog.error .md-dialog-content span {
 	display: block;
 	font-size: .8em;
-	color: darksalmon;
+	color: var(--md-theme-default-primary);
 	font-style: italic;
 }
 
 .md-dialog.flash {
-	background-color: saddlebrown;
-	color: #dddddd;
+	background-color: var(--md-theme-default-primary);
+	color: var(--sb-filmotheque-text-light);
 }
