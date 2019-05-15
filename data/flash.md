@@ -16,7 +16,6 @@ Fonctionnalités en place :
 Les fonctionnalités qui seront développées sont :
 
 * Développement adaptatif du site web ([responsive web design](https://fr.wikipedia.org/wiki/Site_web_adaptatif))
-* ~~Recherche dans la liste des films~~
 * Mise en place d'un certificat signé et gratuit
 * Gestion de compte utilisateur (ajout / modification / suppression) (que pour moi)
 * Liste des films affichable au format `vignettes`

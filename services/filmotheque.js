@@ -97,7 +97,7 @@ class Filmotheque {
 		}
 
 		const filterRegExp = RegExp(
-			escapeStringRegexp(removeAccents(query))
+			escapeStringRegexp(removeAccents(query.trim()))
 				.toLowerCase()
 				.replace(/\s+/g, ".*")
 		);

@@ -1,12 +1,34 @@
 "use strict";
 /* global Vue,moment,window,axios,_ */
 
+const listMoviesByGroup = {
+	CONST: {
+		nbOfMoviesShowedTheFirstTime: 100,
+		nbOfMoviesAddedOnScroll: 30,
+		debounceTimeToSearch: 300,
+		throttleTimeToScroll: 300,
+		nbOfPixelsBeforeAddingToScroll: 10,
+	},
+};
+
 Vue.component("listMoviesByGroup", {
 	data: function () {
 		return {
+			moviesByGroup: {},
 			moviesShownByGroup: {},
 			search: "",
 		};
+	},
+	watch: {
+		moviesByGroup: function () {
+			this.listDateAddedNotShow = _.keys(this.moviesByGroup);
+			this.moviesShownByGroup = {};
+			this.updateList(listMoviesByGroup.CONST.nbOfMoviesShowedTheFirstTime);
+		},
+		search: _.debounce(function () {
+			// eslint-disable-next-line no-invalid-this
+			this.getMovies();
+		}, listMoviesByGroup.CONST.debounceTimeToSearch),
 	},
 	filters: {
 		dateAdded: (dateAdded) => {
@@ -15,10 +37,7 @@ Vue.component("listMoviesByGroup", {
 	},
 	created: function () {
 		this.getMovies()
-			.then(() => this.$emit("loaded"))
-			.catch((error) => this.$emit(
-				"error", "Impossible de récupérer la liste des films", error
-			));
+			.then(() => this.$emit("loaded"));
 	},
 	methods: {
 		getMovies: function () {
@@ -26,29 +45,26 @@ Vue.component("listMoviesByGroup", {
 			if (this.search !== "") {
 				params.filter = this.search;
 			}
-			return axios({
-				method: "get",
-				url: "api/movies",
-				params,
-			})
+			return axios({ method: "get", url: "api/movies", params })
 				.then(({ data }) => {
 					this.moviesByGroup = data;
-					this.listDateAddedNotShow = _.keys(this.moviesByGroup);
-					this.moviesShownByGroup = {};
-					this.updateList(100);
+				})
+				.catch((error) => {
+					this.moviesByGroup = {};
+					this.$emit(
+						"error", "Impossible de récupérer la liste des films", error
+					);
 				});
 		},
 		onScroll: _.throttle(function (event) {
 			const target = event.target;
-			if ((target.offsetHeight + target.scrollTop) >= target.scrollHeight) {
+			if (target.offsetHeight +
+				target.scrollTop +
+				listMoviesByGroup.CONST.nbOfPixelsBeforeAddingToScroll >= target.scrollHeight) {
 				// eslint-disable-next-line no-invalid-this
-				this.updateList(30);
+				this.updateList(listMoviesByGroup.CONST.nbOfMoviesAddedOnScroll);
 			}
-		}, 300),
-		onInput: _.debounce(function () {
-			// eslint-disable-next-line no-invalid-this
-			this.getMovies();
-		}, 500),
+		}, listMoviesByGroup.CONST.throttleTimeToScroll),
 		updateList: function (addMax) {
 			let nbMovies = 0;
 			this.listDateAddedNotShow.some((group) => {
@@ -89,7 +105,7 @@ Vue.component("listMoviesByGroup", {
 					<div class="search">
 						<md-field md-inline>
 							<label>Rechercher...</label>
-							<md-input v-model="search" @input="onInput"></md-input>
+							<md-input v-model="search"></md-input>
 						</md-field>
 					</div>
 					<md-list class="md-double-line md-dense" v-if="!_.isEmpty(moviesShownByGroup)" @scroll="onScroll">
