@@ -9,10 +9,14 @@ Le site est écrit en [nodejs](https://nodejs.org/fr/) pour la partie serveur et
 Vous trouverez une première version minimaliste qui vous permettra de télécharger le film et d'afficher la page du film sur [themoviedb](https://www.themoviedb.org/), [allocine](http://www.allocine.fr/) et [imdb](https://www.imdb.com/).  
 La liste des films est triée par ordre d'ajout des films.
 
+Fonctionnalités en place :
+
+* Recherche dans la liste des films
+
 Les fonctionnalités qui seront développées sont :
 
 * Développement adaptatif du site web ([responsive web design](https://fr.wikipedia.org/wiki/Site_web_adaptatif))
-* Recherche dans la liste des films
+* ~~Recherche dans la liste des films~~
 * Mise en place d'un certificat signé et gratuit
 * Gestion de compte utilisateur (ajout / modification / suppression) (que pour moi)
 * Liste des films affichable au format `vignettes`
@@ -38,6 +42,11 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/sb-filmotheque)
 
 ## Changelog
+
+### 1.3.0
+
+* Optimisation de la lecture de la liste des films
+* Ajout de la recherche
 
 ### 1.2.8
 

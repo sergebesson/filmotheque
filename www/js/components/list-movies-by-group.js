@@ -107,7 +107,7 @@ Vue.component("listMoviesByGroup", {
 										@open="open"
 										class="list-movies-transition-item"
 									/>
-								</transition>
+								</transition-group>
 							</div>
 						</transition-group>
 					</md-list>
