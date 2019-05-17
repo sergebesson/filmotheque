@@ -108,9 +108,9 @@ Vue.component("listMoviesByGroup", {
 			<div class="content list-movies">
 				<div class="md-elevation-10">
 					<div class="search">
-						<md-field md-inline>
+						<md-field md-inline md-clearable>
 							<label>Rechercher...</label>
-							<md-input v-model="search"></md-input>
+							<md-input v-model="search" autofocus></md-input>
 						</md-field>
 						<div class="load" v-show="loading">
 							<div />
