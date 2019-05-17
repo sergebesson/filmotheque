@@ -3,10 +3,10 @@
 
 const listMoviesByGroup = {
 	CONST: {
-		nbOfMoviesShowedTheFirstTime: 100,
+		nbOfMoviesShowedTheFirstTime: 30,
 		nbOfMoviesAddedOnScroll: 30,
-		debounceTimeToSearch: 300,
-		throttleTimeToScroll: 300,
+		debounceTimeToSearch: 1000,
+		throttleTimeToScroll: 500,
 		nbOfPixelsBeforeAddingToScroll: 10,
 	},
 };
