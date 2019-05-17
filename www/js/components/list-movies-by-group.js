@@ -17,6 +17,7 @@ Vue.component("listMoviesByGroup", {
 			moviesByGroup: {},
 			moviesShownByGroup: {},
 			search: "",
+			loading: false,
 		};
 	},
 	watch: {
@@ -45,6 +46,7 @@ Vue.component("listMoviesByGroup", {
 			if (this.search !== "") {
 				params.filter = this.search;
 			}
+			this.loading = true;
 			return axios({ method: "get", url: "api/movies", params })
 				.then(({ data }) => {
 					this.moviesByGroup = data;
@@ -54,6 +56,9 @@ Vue.component("listMoviesByGroup", {
 					this.$emit(
 						"error", "Impossible de récupérer la liste des films", error
 					);
+				})
+				.then(() => {
+					this.loading = false;
 				});
 		},
 		onScroll: _.throttle(function (event) {
@@ -107,6 +112,9 @@ Vue.component("listMoviesByGroup", {
 							<label>Rechercher...</label>
 							<md-input v-model="search"></md-input>
 						</md-field>
+						<div class="load" v-show="loading">
+							<div />
+						</div>
 					</div>
 					<md-list class="md-double-line md-dense" v-if="!_.isEmpty(moviesShownByGroup)" @scroll="onScroll">
 						<transition-group name="list-movies-transition">
