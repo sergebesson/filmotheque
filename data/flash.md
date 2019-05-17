@@ -42,6 +42,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog
 
+### 1.3.2
+
+* Ajustement de la recherche pour une meilleure expérience utilisateur
+
 ### 1.3.1
 
 * Ajout d'une animation pendant le chargement de la liste
