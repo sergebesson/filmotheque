@@ -78,14 +78,13 @@ class Filmotheque {
 	infos() {
 		const infos = { version, nbMovies: this.collectionFile.collection.length };
 		const flashFileName = path.join(__dirname, "../data/flash.md");
-		this.logger.log("debug", "Filmotheque::infos", { flashFileName });
 		return fs.access(flashFileName)
 			.then(() => fs.readFile(flashFileName, "utf8"))
 			.then((flashMarkdown) => _.assign(
 				infos, { flash: markdown.toHTML(flashMarkdown) }
 			))
 			.catch((error) => {
-				this.logger.log("info", "infos", { error: error.message });
+				this.logger.log("warn", "error read flash", { error: error.message });
 				return infos;
 			});
 	}

@@ -56,6 +56,10 @@ module.exports = ({ filmotheque, configLoader, logger }) => {
 		if (!movie) {
 			return next();
 		}
+		logger.log("debug", `${request.auth.user} starts download '${movie.fileName}'`);
+		response.on("finish", () => {
+			logger.log("debug", `${request.auth.user} stops download '${movie.fileName}'`);
+		});
 		response.download(
 			path.join(configLoader.getValue("storage.moviesDirectory"), movie.fileName)
 		);
