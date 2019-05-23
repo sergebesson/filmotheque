@@ -1,5 +1,5 @@
 "use strict";
-/* global Vue,byteSize */
+/* global Vue,byteSize,window */
 
 Vue.component("movieItem", {
 	props: [ "movie" ],
@@ -9,9 +9,31 @@ Vue.component("movieItem", {
 			return `${size} ${unit}`;
 		},
 	},
+	methods: {
+		open: function (site, target) {
+			let url = "";
+			switch (site) {
+				case "themoviedb":
+					url = `https://www.themoviedb.org/movie/${ this.movie.idTheMovieDb }?language=fr`;
+					break;
+
+				case "allocine":
+					url = `http://www.allocine.fr/film/fichefilm_gen_cfilm=${ this.movie.idAlloCine }.html`;
+					break;
+
+				case "imdb":
+					url = `https://www.imdb.com/title/${ this.movie.idImdb }`;
+					break;
+
+				default:
+					return;
+			}
+			window.open(url, target || site);
+		},
+	},
 	template: `
 		<div>
-			<md-list-item @click="$emit('download', movie)">
+			<md-list-item @click="$refs.download.click()">
 				<div class="md-list-item-text">
 					<span class="titre">{{ movie.title }}</span>
 					<span class="file">{{ movie.fileName }} - {{ movie.size | byte-size }}</span>
@@ -20,24 +42,28 @@ Vue.component("movieItem", {
 				<div class="md-list-action">
 					<md-button
 						class="md-icon-button"
-						@click.stop="$emit('open', 'themoviedb', movie)"
+						@click.stop="open('themoviedb')"
+						@auxclick.stop.prevent="open('themoviedb', '_blank')"
 					>
 						<img src="../../images/themoviedb.png" />
 					</md-button>
 					<md-button
 						class="md-icon-button"
-						@click.stop="$emit('open', 'allocine', movie)"
+						@click.stop="open('allocine')"
+						@auxclick.stop.prevent="open('allocine', '_blank')"
 					>
 						<img src="../../images/allocine.ico" />
 					</md-button>
 					<md-button
 						class="md-icon-button"
-						@click.stop="$emit('open' ,'imdb', movie)"
+						@click.stop="open('imdb')"
+						@auxclick.stop.prevent="open('imdb', '_blank')"
 					>
 						<img src="../../images/imdb.ico" />
 					</md-button>
 				</div>
 			</md-list-item>
+			<a ref="download" :href="'/api/download/' + movie._id" style="display:none" />
 			<md-divider />
 		</div>
 	`,
