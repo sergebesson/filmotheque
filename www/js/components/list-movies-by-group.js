@@ -1,5 +1,5 @@
 "use strict";
-/* global Vue,moment,window,axios,_ */
+/* global Vue,moment,axios,_ */
 
 const listMoviesByGroup = {
 	CONST: {
@@ -79,38 +79,15 @@ Vue.component("listMoviesByGroup", {
 				return nbMovies >= addMax;
 			});
 		},
-		download: function (movie) {
-			window.open(`/api/download/${ movie._id }`);
-		},
-		open: function (site, movie) {
-			let url = "";
-			switch (site) {
-				case "themoviedb":
-					url = `https://www.themoviedb.org/movie/${ movie.idTheMovieDb }?language=fr`;
-					break;
-
-				case "allocine":
-					url = `http://www.allocine.fr/film/fichefilm_gen_cfilm=${ movie.idAlloCine }.html`;
-					break;
-
-				case "imdb":
-					url = `https://www.imdb.com/title/${ movie.idImdb }`;
-					break;
-
-				default:
-					return;
-			}
-			window.open(url, site);
-		},
 	},
 	template: `
 		<transition name="fade">
 			<div class="content list-movies">
 				<div class="md-elevation-10">
 					<div class="search">
-						<md-field md-inline>
+						<md-field md-inline md-clearable>
 							<label>Rechercher...</label>
-							<md-input v-model="search"></md-input>
+							<md-input v-model="search" autofocus></md-input>
 						</md-field>
 						<div class="load" v-show="loading">
 							<div />
@@ -127,8 +104,6 @@ Vue.component("listMoviesByGroup", {
 									<movie-item v-for="movie in _.sortBy(movies, 'title')"
 										:key="movie._id"
 										:movie="movie"
-										@download="download"
-										@open="open"
 										class="list-movies-transition-item"
 									/>
 								</transition-group>

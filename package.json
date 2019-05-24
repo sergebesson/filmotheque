@@ -25,7 +25,7 @@
     "express": "^4.16.4",
     "express-basic-auth": "^1.2.0",
     "lodash": "^4.17.11",
-    "markdown": "^0.5.0",
+    "markdown-it": "^8.4.2",
     "moment": "^2.24.0",
     "remove-accents": "^0.4.2",
     "sb-collection-file": "^0.4.0",
