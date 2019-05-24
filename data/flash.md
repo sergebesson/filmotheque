@@ -1,4 +1,11 @@
-# Information
+# Filmotheque
+
+## nouvelle version 1.3.3
+
+Cette nouvelle version de type `patch` apporte quelques améliorations mineures.
+Pour plus d'information voir le [Changelog](#Changelog)
+
+## Informations
 
 Suite à un problème de disque dur, j'ai perdu le site.
 
@@ -40,7 +47,13 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/sb-filmotheque)
 
-## Changelog
+## Changelog <a id="Changelog"></a>
+
+### 1.3.3
+
+* Amélioration du download
+* Ajout d'une log au téléchargement
+* Correction animation chargement de la liste
 
 ### 1.3.2
 

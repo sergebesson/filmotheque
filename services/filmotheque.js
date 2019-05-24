@@ -4,7 +4,7 @@ const _ = require("lodash");
 const path = require("path");
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const fs = require("fs").promises;
-const { markdown } = require("markdown");
+const markdownIt = require("markdown-it")({ html: true });
 const escapeStringRegexp = require("escape-string-regexp");
 const removeAccents = require("remove-accents");
 
@@ -81,7 +81,7 @@ class Filmotheque {
 		return fs.access(flashFileName)
 			.then(() => fs.readFile(flashFileName, "utf8"))
 			.then((flashMarkdown) => _.assign(
-				infos, { flash: markdown.toHTML(flashMarkdown) }
+				infos, { flash: markdownIt.render(flashMarkdown) }
 			))
 			.catch((error) => {
 				this.logger.log("warn", "error read flash", { error: error.message });
