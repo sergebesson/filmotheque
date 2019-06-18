@@ -1,6 +1,6 @@
 # Filmotheque
 
-## nouvelle version 1.3.3
+## nouvelle version 1.3.4
 
 Cette nouvelle version de type `patch` apporte quelques améliorations mineures.
 Pour plus d'information voir le [Changelog](#Changelog)
@@ -48,6 +48,10 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/sb-filmotheque)
 
 ## Changelog <a id="Changelog"></a>
+
+### 1.3.4
+
+* Ajout d'une animation lors de la mise à jour de la liste suite au scroll
 
 ### 1.3.3
 
