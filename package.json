@@ -1,6 +1,6 @@
 {
   "name": "sb-filmotheque",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Présentation de mes films",
   "main": "index.js",
   "scripts": {
