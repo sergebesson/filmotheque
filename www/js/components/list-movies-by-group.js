@@ -18,6 +18,7 @@ Vue.component("listMoviesByGroup", {
 			moviesShownByGroup: {},
 			search: "",
 			loading: false,
+			loadingScroll: true,
 		};
 	},
 	watch: {
@@ -71,12 +72,16 @@ Vue.component("listMoviesByGroup", {
 			}
 		}, listMoviesByGroup.CONST.throttleTimeToScroll),
 		updateList: function (addMax) {
+			this.loadingScroll = true;
 			let nbMovies = 0;
-			this.listDateAddedNotShow.some((group) => {
-				this.$set(this.moviesShownByGroup, group, this.moviesByGroup[group]);
-				this.listDateAddedNotShow = this.listDateAddedNotShow.slice(1);
-				nbMovies += this.moviesByGroup[group].length;
-				return nbMovies >= addMax;
+			_.defer(() => {
+				this.listDateAddedNotShow.some((group) => {
+					this.$set(this.moviesShownByGroup, group, this.moviesByGroup[group]);
+					this.listDateAddedNotShow = this.listDateAddedNotShow.slice(1);
+					nbMovies += this.moviesByGroup[group].length;
+					return nbMovies >= addMax;
+				});
+				this.loadingScroll = false;
 			});
 		},
 	},
@@ -89,9 +94,7 @@ Vue.component("listMoviesByGroup", {
 							<label>Rechercher...</label>
 							<md-input v-model="search" autofocus></md-input>
 						</md-field>
-						<div class="load" v-show="loading">
-							<div />
-						</div>
+						<div class="load" v-show="loading"><div /></div>
 					</div>
 					<md-list class="md-double-line md-dense" v-if="!_.isEmpty(moviesShownByGroup)" @scroll="onScroll">
 						<transition-group name="list-movies-transition">
@@ -109,6 +112,10 @@ Vue.component("listMoviesByGroup", {
 								</transition-group>
 							</div>
 						</transition-group>
+						<div class="load-scroll"
+							v-bind:class="{ animation: loadingScroll }"
+							v-if="listDateAddedNotShow.length > 0"
+						><div /></div>
 					</md-list>
 					<div v-else class="empty">Aucun film</div>
 				</div>
