@@ -3,8 +3,7 @@
 
 const listMoviesByGroup = {
 	CONST: {
-		nbOfMoviesShowedTheFirstTime: 30,
-		nbOfMoviesAddedOnScroll: 30,
+		pageSize: 30,
 		debounceTimeToSearch: 1000,
 		throttleTimeToScroll: 500,
 		nbOfPixelsBeforeAddingToScroll: 10,
@@ -14,52 +13,71 @@ const listMoviesByGroup = {
 Vue.component("listMoviesByGroup", {
 	data: function () {
 		return {
-			moviesByGroup: {},
-			moviesShownByGroup: {},
+			page: 1,
+			movies: [],
 			search: "",
 			loading: false,
-			loadingScroll: true,
+			showLoadingScroll: true,
 		};
 	},
-	watch: {
+	computed: {
 		moviesByGroup: function () {
-			this.listDateAddedNotShow = _.keys(this.moviesByGroup);
-			this.moviesShownByGroup = {};
-			this.updateList(listMoviesByGroup.CONST.nbOfMoviesShowedTheFirstTime);
+			return _.groupBy(this.movies, (movie) =>
+				moment(movie.dateAdded).set({
+					hour: 0, minute: 0, second: 0, millisecond: 0,
+				}).toISOString());
 		},
+	},
+	watch: {
 		search: _.debounce(function () {
 			// eslint-disable-next-line no-invalid-this
-			this.getMovies();
+			this.initializeList();
 		}, listMoviesByGroup.CONST.debounceTimeToSearch),
 	},
 	filters: {
-		dateAdded: (dateAdded) => {
+		dateAddedFilter: (dateAdded) => {
 			return moment(dateAdded).format("LL");
 		},
 	},
 	created: function () {
-		this.getMovies()
+		this.totalPages = 1;
+		this.initializeList()
 			.then(() => this.$emit("loaded"));
 	},
 	methods: {
-		getMovies: function () {
-			const params = { group_by: "dateAdded" };
-			if (this.search !== "") {
-				params.filter = this.search;
+		initializeList: function () {
+			this.page = 1;
+			return this.getMovies();
+		},
+		nextPage: function () {
+			if (this.page >= this.totalPages) {
+				return Promise.resolve();
 			}
+
+			this.page++;
+			return this.getMovies();
+		},
+		getMovies: function () {
+			const params = {
+				page_size: listMoviesByGroup.CONST.pageSize,
+				page: this.page,
+				sort: "date-added",
+				search: this.search,
+			};
 			this.loading = true;
 			return axios({ method: "get", url: "api/movies", params })
 				.then(({ data }) => {
-					this.moviesByGroup = data;
+					this.totalPages = data.total_pages;
+					this.movies = this.page === 1 ? data.movies : this.movies.concat(data.movies);
 				})
 				.catch((error) => {
-					this.moviesByGroup = {};
 					this.$emit(
 						"error", "Impossible de récupérer la liste des films", error
 					);
 				})
 				.then(() => {
 					this.loading = false;
+					this.showLoadingScroll = this.page < this.totalPages;
 				});
 		},
 		onScroll: _.throttle(function (event) {
@@ -68,22 +86,9 @@ Vue.component("listMoviesByGroup", {
 				target.scrollTop +
 				listMoviesByGroup.CONST.nbOfPixelsBeforeAddingToScroll >= target.scrollHeight) {
 				// eslint-disable-next-line no-invalid-this
-				this.updateList(listMoviesByGroup.CONST.nbOfMoviesAddedOnScroll);
+				this.nextPage();
 			}
 		}, listMoviesByGroup.CONST.throttleTimeToScroll),
-		updateList: function (addMax) {
-			this.loadingScroll = true;
-			let nbMovies = 0;
-			_.defer(() => {
-				this.listDateAddedNotShow.some((group) => {
-					this.$set(this.moviesShownByGroup, group, this.moviesByGroup[group]);
-					this.listDateAddedNotShow = this.listDateAddedNotShow.slice(1);
-					nbMovies += this.moviesByGroup[group].length;
-					return nbMovies >= addMax;
-				});
-				this.loadingScroll = false;
-			});
-		},
 	},
 	template: `
 		<transition name="fade">
@@ -94,17 +99,17 @@ Vue.component("listMoviesByGroup", {
 							<label>Rechercher...</label>
 							<md-input v-model="search" autofocus></md-input>
 						</md-field>
-						<div class="load" v-show="loading"><div /></div>
+						<div class="load" v-show="loading && page === 1"><div /></div>
 					</div>
-					<md-list class="md-double-line md-dense" v-if="!_.isEmpty(moviesShownByGroup)" @scroll="onScroll">
+					<md-list class="md-double-line md-dense" v-if="!_.isEmpty(moviesByGroup)" @scroll="onScroll">
 						<transition-group name="list-movies-transition">
-							<div v-for="(movies, dateAdded) in moviesShownByGroup"
+							<div v-for="(groupMovies, dateAdded) in moviesByGroup"
 								:key="dateAdded"
 								class="list-movies-transition-item"
 							>
-								<md-subheader>{{ dateAdded | dateAdded }}</md-subheader>
+								<md-subheader>{{ dateAdded | dateAddedFilter }}</md-subheader>
 								<transition-group name="list-movies-transition">
-									<movie-item v-for="movie in _.sortBy(movies, 'title')"
+									<movie-item v-for="movie in groupMovies"
 										:key="movie._id"
 										:movie="movie"
 										class="list-movies-transition-item"
@@ -113,8 +118,8 @@ Vue.component("listMoviesByGroup", {
 							</div>
 						</transition-group>
 						<div class="load-scroll"
-							v-bind:class="{ animation: loadingScroll }"
-							v-if="listDateAddedNotShow.length > 0"
+							v-bind:class="{ animation: loading }"
+							v-if="showLoadingScroll"
 						><div /></div>
 					</md-list>
 					<div v-else class="empty">Aucun film</div>

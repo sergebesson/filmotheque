@@ -95,19 +95,23 @@
 
 .list-movies .load-scroll {
 	position: relative;
-	margin: 5px 30px;
-	min-height: 8px;
+	margin: 10px 30px;
+	min-height: 15px;
 }
-.list-movies .load-scroll.animation div {
+.list-movies .load-scroll div {
 	position: absolute;
 	background-color:var(--md-theme-default-primary);;
-	height: 3px;
+	height: 5px;
+	border-radius: 50%;
+	left: 0%;
+	width: 10px;
+}
+.list-movies .load-scroll.animation div {
 	animation-name: k2000;
 	animation-duration: 2s;
 	animation-iteration-count: infinite;
 	animation-timing-function: ease-in-out;
 	animation-delay: 0s;
-	border-radius: 50%;
 }
 
 @keyframes k2000 {
