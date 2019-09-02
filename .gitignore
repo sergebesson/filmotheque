@@ -1,5 +1,6 @@
 # Perso
 data/filmotheque\.*
+.vscode
 
 # Logs
 logs

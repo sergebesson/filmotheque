@@ -10,6 +10,35 @@ const { Users } = require("../users.js");
 
 module.exports = ({ filmotheque, configLoader, logger }) => {
 
+	function checkQueryPagination(query) {
+		const pageSize = Number(_.get(query, "page_size", 20));
+		const page = Number(_.get(query, "page", 1));
+
+		if (!_.isFinite(page) || !_.isFinite(pageSize)) {
+			return {
+				success: false,
+				codeError: !_.isFinite(page) ? "invalid_page" : "invalid_page_size",
+			};
+		}
+
+		return {
+			success: true,
+			pageSize,
+			page,
+		};
+	}
+
+	function buildMoviesListWithPagination({ pageSize, page, movies }) {
+		const begin = pageSize * (page - 1);
+		const end = begin + pageSize;
+		return {
+			page: page,
+			total_pages: Math.ceil(movies.length / pageSize),
+			total_movies: movies.length,
+			movies: _.slice(movies, begin, end),
+		};
+	}
+
 	router.use(function (request, response, next) {
 		return Users.checkRouteAccessRights(request.auth.user, request.path) ?
 			next() :
@@ -32,23 +61,33 @@ module.exports = ({ filmotheque, configLoader, logger }) => {
 	});
 
 	router.get("/movies", function (request, response) {
-		if (request.query.group_by && request.query.group_by !== "dateAdded") {
+		const sort = _.get(request.query, "sort");
+		if (sort && sort !== "date-added") {
 			return response.status(400).send({
-				status: 400, error_description: "invalid_group_by",
+				status: 400,
+				error_description: "invalid_sort",
 			});
 		}
 
-		const movies = filmotheque.find(request.query.filter);
-		const moviesResult = request.query.group_by === "dateAdded" ?
-			_.chain(movies)
-				.sortBy("dateAdded")
-				.reverse()
-				.groupBy((movie) => moment(movie.dateAdded).set({
-					hour: 0, minute: 0, second: 0, millisecond: 0,
-				}).toISOString())
-				.value() :
-			movies;
-		response.status(200).send(moviesResult);
+		const checkPagination = checkQueryPagination(request.query);
+		if (!checkPagination.success) {
+			return response.status(400).send({
+				status: 400,
+				error_description: checkPagination.codeError,
+			});
+		}
+		const { pageSize, page } = checkPagination;
+
+		const iteratees = [ "title" ];
+		const orders = [ "asc" ];
+		if (sort === "date-added") {
+			iteratees.unshift("dateAdded");
+			orders.unshift("desc");
+		}
+
+		const movies = _.orderBy(filmotheque.find(request.query.search), iteratees, orders);
+
+		response.status(200).send(buildMoviesListWithPagination({ pageSize, page, movies }));
 	});
 
 	router.get("/download/:id", function (request, response, next) {
