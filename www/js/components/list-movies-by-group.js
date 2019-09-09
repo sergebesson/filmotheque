@@ -22,10 +22,7 @@ Vue.component("listMoviesByGroup", {
 	},
 	computed: {
 		moviesByGroup: function () {
-			return _.groupBy(this.movies, (movie) =>
-				moment(movie.dateAdded).set({
-					hour: 0, minute: 0, second: 0, millisecond: 0,
-				}).toISOString());
+			return _.groupBy(this.movies, "dateAdded");
 		},
 	},
 	watch: {

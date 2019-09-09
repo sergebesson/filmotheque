@@ -21,7 +21,7 @@ class Filmotheque {
 				_id: { type: "string" },
 				title: { type: "string" },
 				fileName: { type: "string" },
-				dateAdded: { type: "string", format: "date-time" },
+				dateAdded: { type: "string", format: "date" },
 				idTheMovieDb: { type: "string" },
 				idAlloCine: { type: "string" },
 				idImdb: { type: "string" },
@@ -55,7 +55,7 @@ class Filmotheque {
 							return {
 								title,
 								fileName,
-								dateAdded: fileStat.mtime.toISOString(),
+								dateAdded: fileStat.mtime.toISOString().split("T")[0],
 								idTheMovieDb,
 								idAlloCine,
 								idImdb,
