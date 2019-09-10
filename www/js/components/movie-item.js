@@ -41,26 +41,20 @@ Vue.component("movieItem", {
 
 				<div class="md-list-action">
 					<md-button
-						class="md-icon-button"
+						class="md-icon-button themoviedb"
 						@click.stop="open('themoviedb')"
 						@auxclick.stop.prevent="open('themoviedb', '_blank')"
-					>
-						<img src="../../images/themoviedb.png" />
-					</md-button>
+					/>
 					<md-button
-						class="md-icon-button"
+						class="md-icon-button allocine"
 						@click.stop="open('allocine')"
 						@auxclick.stop.prevent="open('allocine', '_blank')"
-					>
-						<img src="../../images/allocine.ico" />
-					</md-button>
+					/>
 					<md-button
-						class="md-icon-button"
+						class="md-icon-button imdb"
 						@click.stop="open('imdb')"
 						@auxclick.stop.prevent="open('imdb', '_blank')"
-					>
-						<img src="../../images/imdb.ico" />
-					</md-button>
+					/>
 				</div>
 			</md-list-item>
 			<a ref="download" :href="'/api/download/' + movie._id" style="display:none" />

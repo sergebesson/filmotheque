@@ -62,6 +62,19 @@
 
 .list-movies .md-button {
 	margin: 0 -10px 0 0;
+	background-size: 24px;
+	background-position: center;
+	background-repeat: no-repeat
+}
+
+.list-movies .md-button.themoviedb {
+	background-image: url("../../images/themoviedb.svg");
+}
+.list-movies .md-button.allocine {
+	background-image: url("../../images/allocine.ico");
+}
+.list-movies .md-button.imdb {
+	background-image: url("../../images/imdb.ico");
 }
 
 .list-movies .titre {
