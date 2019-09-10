@@ -1,7 +1,6 @@
 "use strict";
 
 const _ = require("lodash");
-const moment = require("moment");
 // eslint-disable-next-line new-cap
 const router = require("express").Router();
 const path = require("path");
