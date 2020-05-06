@@ -12,7 +12,7 @@ Vue.component("flash", {
 	created: function () {
 		this.showFlash()
 			.catch((error) => this.$emit(
-				"error", "Impossible de récupérer les informations de l'api", error
+				"error", "Impossible de récupérer les informations de l'api", error,
 			));
 	},
 	methods: {

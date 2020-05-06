@@ -61,7 +61,7 @@ class Server {
 					this.configuration.host
 				}:${
 					this.configuration.port
-				} ${this.configuration.ssl.enable ? "in ssl mode" : ""}`
+				} ${this.configuration.ssl.enable ? "in ssl mode" : ""}`,
 				);
 
 				this.logger.log("info", `url to start application : ${

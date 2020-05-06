@@ -23,7 +23,7 @@ Promise.resolve()
 	.then((usersJson) => {
 		const users = _.mapValues(usersJson, "passwd");
 		const filmotheque = new Filmotheque(
-			context.configLoader.getValue("storage.databaseDirectory"), context.logger
+			context.configLoader.getValue("storage.databaseDirectory"), context.logger,
 		);
 		_.assign(context, { users, filmotheque });
 		return filmotheque.loadMovies();

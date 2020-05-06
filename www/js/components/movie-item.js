@@ -41,25 +41,22 @@ Vue.component("movieItem", {
 
 				<div class="md-list-action">
 					<md-button
-						class="md-icon-button"
+						class="md-icon-button themoviedb"
 						@click.stop="open('themoviedb')"
-						@auxclick.stop.prevent="open('themoviedb', '_blank')"
-					>
-						<img src="../../images/themoviedb.png" />
+						@auxclick.stop.prevent="open('themoviedb', '_blank')">
+						<md-tooltip md-delay="500" md-direction="right">The Movie Database</md-tooltip>
 					</md-button>
 					<md-button
-						class="md-icon-button"
+						class="md-icon-button allocine"
 						@click.stop="open('allocine')"
-						@auxclick.stop.prevent="open('allocine', '_blank')"
-					>
-						<img src="../../images/allocine.ico" />
+						@auxclick.stop.prevent="open('allocine', '_blank')">
+						<md-tooltip md-delay="500" md-direction="right">AlloCiné</md-tooltip>
 					</md-button>
 					<md-button
-						class="md-icon-button"
+						class="md-icon-button imdb"
 						@click.stop="open('imdb')"
-						@auxclick.stop.prevent="open('imdb', '_blank')"
-					>
-						<img src="../../images/imdb.ico" />
+						@auxclick.stop.prevent="open('imdb', '_blank')">
+						<md-tooltip md-delay="500" md-direction="right">IMDb</md-tooltip>
 					</md-button>
 				</div>
 			</md-list-item>

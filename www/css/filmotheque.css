@@ -15,8 +15,9 @@ body {
 	overflow-y: auto;
 }
 
-.md-dialog {
+.md-dialog-container{
 	border-radius: 15px;
+	transform: none;
 }
 
 .md-dialog-title {
@@ -31,7 +32,7 @@ body {
 	opacity: 0;
 }
 
-.md-dialog.error {
+.md-dialog.error  .md-dialog-container {
 	background-color: var(--md-theme-default-accent, #ff5252);
 	color: var(--md-theme-default-text-primary-on-accent, #fff);
 }
@@ -42,7 +43,7 @@ body {
 	font-style: italic;
 }
 
-.md-dialog.flash {
+.md-dialog.flash  .md-dialog-container {
 	background-color: var(--md-theme-default-primary);
 	color: var(--sb-filmotheque-text-light);
 }

@@ -1,6 +1,6 @@
 # Filmotheque
 
-## nouvelle version 1.3.6
+## nouvelle version 1.3.7
 
 Cette nouvelle version de type `patch` apporte quelques améliorations mineures.
 Pour plus d'information voir le [Changelog](#Changelog)
@@ -19,11 +19,11 @@ La liste des films est triée par ordre d'ajout des films.
 Fonctionnalités en place :
 
 * Recherche dans la liste des films
+* Mise en place d'un certificat signé et gratuit
 
 Les fonctionnalités qui seront développées sont :
 
 * Développement adaptatif du site web ([responsive web design](https://fr.wikipedia.org/wiki/Site_web_adaptatif))
-* Mise en place d'un certificat signé et gratuit
 * Gestion de compte utilisateur (ajout / modification / suppression) (que pour moi)
 * Liste des films affichable au format `vignettes`
 * Trier la liste par le titre du film
@@ -48,6 +48,11 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/sb-filmotheque)
 
 ## Changelog <a id="Changelog"></a>
+
+### 1.3.7
+
+* Changement du logo de TMDB et ajout de tooltip
+* Mise en place d'un certificat signé et gratuit
 
 ### 1.3.6
 
