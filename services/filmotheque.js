@@ -81,7 +81,7 @@ class Filmotheque {
 		return fs.access(flashFileName)
 			.then(() => fs.readFile(flashFileName, "utf8"))
 			.then((flashMarkdown) => _.assign(
-				infos, { flash: markdownIt.render(flashMarkdown) }
+				infos, { flash: markdownIt.render(flashMarkdown) },
 			))
 			.catch((error) => {
 				this.logger.log("warn", "error read flash", { error: error.message });
@@ -98,10 +98,10 @@ class Filmotheque {
 		const filterRegExp = RegExp(
 			escapeStringRegexp(removeAccents(query.trim()))
 				.toLowerCase()
-				.replace(/\s+/g, ".*")
+				.replace(/\s+/g, ".*"),
 		);
 		return this.collectionFile.collection.find(
-			(movie) => filterRegExp.test(movie._search)
+			(movie) => filterRegExp.test(movie._search),
 		);
 	}
 

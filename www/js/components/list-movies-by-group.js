@@ -69,7 +69,7 @@ Vue.component("listMoviesByGroup", {
 				})
 				.catch((error) => {
 					this.$emit(
-						"error", "Impossible de récupérer la liste des films", error
+						"error", "Impossible de récupérer la liste des films", error,
 					);
 				})
 				.then(() => {

@@ -26,7 +26,7 @@ class Logger {
 			format: combine(
 				errors({ stack: true }),
 				timestamp(),
-				myFormat
+				myFormat,
 			),
 			transports: [
 				new transports.File({

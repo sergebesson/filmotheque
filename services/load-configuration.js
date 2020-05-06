@@ -54,7 +54,7 @@ class LoadConfiguration {
 						sslEnable === "TRUE" ||
 						sslEnable === 1 ||
 						sslEnable === "1"
-					)
+					),
 				);
 
 				return configLoader;
