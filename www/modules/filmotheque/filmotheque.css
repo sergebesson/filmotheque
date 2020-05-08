@@ -6,13 +6,16 @@
 	--md-theme-default-primary: saddlebrown;
 }
 
-body {
+body, .main {
 	height: 100%;
 }
 
 .content {
+	padding: 20px;
 	height: 100%;
-	overflow-y: auto;
+}
+.content > div:first-child {
+	height: 100%;
 }
 
 .md-dialog-container{
@@ -30,20 +33,4 @@ body {
 }
 .fade-enter, .fade-leave-to {
 	opacity: 0;
-}
-
-.md-dialog.error  .md-dialog-container {
-	background-color: var(--md-theme-default-accent, #ff5252);
-	color: var(--md-theme-default-text-primary-on-accent, #fff);
-}
-.md-dialog.error .md-dialog-content span {
-	display: block;
-	font-size: .8em;
-	color: var(--md-theme-default-primary);
-	font-style: italic;
-}
-
-.md-dialog.flash  .md-dialog-container {
-	background-color: var(--md-theme-default-primary);
-	color: var(--sb-filmotheque-text-light);
 }

@@ -1,18 +1,24 @@
-"use strict";
-/* global Vue,_ */
+/* global _ */
 
-Vue.component("error", {
+import { eventBus } from "../../eventBus.mjs";
+
+const errorComponent = {
 	data: function () {
 		return {
 			show: false,
 			message: "",
-			error: null,
+			errorDescription: "",
 		};
 	},
 	computed: {
 		content: function () {
 			return `${ this.message } <span>${ this.errorDescription }</span>`;
 		},
+	},
+	created: function () {
+		eventBus.$on("error", (message, error) => {
+			this.showError(message, error);
+		});
 	},
 	methods: {
 		showError: function (message, error) {
@@ -34,4 +40,6 @@ Vue.component("error", {
 			:md-content="content"
 		/>
 	`,
-});
+};
+
+export { errorComponent };

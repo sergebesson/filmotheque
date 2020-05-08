@@ -1,0 +1,11 @@
+
+.md-dialog.error  .md-dialog-container {
+	background-color: var(--md-theme-default-accent, #ff5252);
+	color: var(--md-theme-default-text-primary-on-accent, #fff);
+}
+.md-dialog.error .md-dialog-content span {
+	display: block;
+	font-size: .8em;
+	color: var(--md-theme-default-primary);
+	font-style: italic;
+}

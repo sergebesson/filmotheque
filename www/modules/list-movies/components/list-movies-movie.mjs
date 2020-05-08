@@ -1,7 +1,6 @@
-"use strict";
-/* global Vue,byteSize,window */
+/* global byteSize,window */
 
-Vue.component("movieItem", {
+const listMoviesMovieComponent = {
 	props: [ "movie" ],
 	filters: {
 		"byte-size": function (bytes) {
@@ -64,4 +63,6 @@ Vue.component("movieItem", {
 			<md-divider />
 		</div>
 	`,
-});
+};
+
+export { listMoviesMovieComponent };

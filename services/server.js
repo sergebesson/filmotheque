@@ -6,7 +6,7 @@ const express = require("express");
 const fs = require("fs");
 const expressBasicAuth = require("express-basic-auth");
 
-const staticRoutes = require("./routers/static.js");
+const staticRoutesFactory = require("./routers/static.js");
 const apiRoutesFactory = require("./routers/api.js");
 
 class Server {
@@ -17,6 +17,7 @@ class Server {
 		this.configuration = configLoader.getValue("server");
 
 		const routeApi = apiRoutesFactory(context);
+		const staticRoutes = staticRoutesFactory(context);
 
 		this.app = express();
 

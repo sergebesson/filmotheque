@@ -5,35 +5,33 @@ const path = require("path");
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
-module.exports = router;
-
 function staticMiddleware(directory) {
 	return express.static(path.join(__dirname, "../..", directory));
 }
 
-/* vue.js */
-router.use("/libs/vue.js", staticMiddleware("node_modules/vue/dist/vue.min.js"));
+module.exports = () => {
 
-/* vue matériel */
-router.use("/css/vue-material.css",
-	staticMiddleware("node_modules/vue-material/dist/vue-material.min.css"));
-router.use("/css/vue-material/theme/default.css",
-	staticMiddleware("node_modules/vue-material/dist/theme/default.css"));
-router.use("/libs/vue-material.js",
-	staticMiddleware("node_modules/vue-material/dist/vue-material.min.js"));
+	/* vue.js */
+	router.use("/libs/vue", staticMiddleware("node_modules/vue/dist"));
 
-/* lodash */
-router.use("/libs/lodash.js", staticMiddleware("node_modules/lodash/lodash.min.js"));
+	/* vue matériel */
+	router.use("/libs/vue-material", staticMiddleware("node_modules/vue-material/dist"));
 
-/* moment */
-router.use("/libs/moment.js", staticMiddleware("node_modules/moment/min/moment.min.js"));
-router.use("/libs/moment/locale/fr.js", staticMiddleware("node_modules/moment/locale/fr.js"));
+	/* lodash */
+	router.use("/libs/lodash", staticMiddleware("node_modules/lodash"));
 
-/* axios */
-router.use("/libs/axios.js", staticMiddleware("node_modules/axios/dist/axios.min.js"));
+	/* moment */
+	router.use("/libs/moment/locale", staticMiddleware("node_modules/moment/locale"));
+	router.use("/libs/moment", staticMiddleware("node_modules/moment/min"));
 
-/* byte-size */
-router.use("/libs/byte-size.js", staticMiddleware("node_modules/byte-size/dist/index.js"));
+	/* axios */
+	router.use("/libs/axios", staticMiddleware("node_modules/axios/dist"));
 
-/* site */
-router.use(staticMiddleware("www"));
+	/* byte-size */
+	router.use("/libs/byte-size", staticMiddleware("node_modules/byte-size/dist"));
+
+	/* site */
+	router.use(staticMiddleware("www"));
+
+	return router;
+};

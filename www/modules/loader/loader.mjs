@@ -1,5 +1,4 @@
-"use strict";
-/* global Vue,document */
+/* global document */
 
 const loaderCore = {
 	mounted: function () {
@@ -9,11 +8,13 @@ const loaderCore = {
 	template: "#loader",
 };
 
-Vue.component("loader", {
+const loaderComponent = {
 	components: { loaderCore },
 	template: `
 		<transition name="fade">
 			<loader-core />
 		</transition>
 	`,
-});
+};
+
+export { loaderComponent };

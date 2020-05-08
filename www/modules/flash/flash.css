@@ -1,0 +1,5 @@
+
+.md-dialog.flash  .md-dialog-container {
+	background-color: var(--md-theme-default-primary);
+	color: var(--sb-filmotheque-text-light);
+}

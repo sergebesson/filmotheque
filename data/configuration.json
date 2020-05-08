@@ -19,5 +19,8 @@
 		"max_size": 102400,
 		"max_files": 5,
 		"level": "debug"
+	},
+	"vuejs": {
+		"debug": true
 	}
 }
