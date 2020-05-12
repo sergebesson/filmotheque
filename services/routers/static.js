@@ -9,9 +9,14 @@ function staticMiddleware(directory) {
 	return express.static(path.join(__dirname, "../..", directory));
 }
 
-module.exports = () => {
+module.exports = ({ configLoader }) => {
+
+	const debug = configLoader.getValue("vuejs.debug", false);
 
 	/* vue.js */
+	if (debug) {
+		router.use("/libs/vue/vue.min.js", staticMiddleware("node_modules/vue/dist/vue.js"));
+	}
 	router.use("/libs/vue", staticMiddleware("node_modules/vue/dist"));
 
 	/* vue matériel */
@@ -29,6 +34,11 @@ module.exports = () => {
 
 	/* byte-size */
 	router.use("/libs/byte-size", staticMiddleware("node_modules/byte-size/dist"));
+
+	/* config */
+	router.use("/configuration", function (request, response) {
+		response.status(200).send(configLoader.getValue("vuejs", {}));
+	});
 
 	/* site */
 	router.use(staticMiddleware("www"));

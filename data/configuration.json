@@ -21,6 +21,7 @@
 		"level": "debug"
 	},
 	"vuejs": {
-		"debug": true
+		"debug": true,
+		"pageSize": 5
 	}
 }

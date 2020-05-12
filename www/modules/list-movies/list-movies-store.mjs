@@ -1,6 +1,7 @@
 /* global axios */
 
 import { eventBus } from "../../eventBus.mjs";
+import { configurationStore } from "../../configurationStore.mjs";
 
 // eslint-disable-next-line no-unused-vars
 const storeListMovies = {
@@ -81,5 +82,10 @@ const storeListMovies = {
 		}
 	},
 };
+
+eventBus.$on("configuration-loaded", () => {
+	storeListMovies.configuration.pageSize = configurationStore
+		.getValue("pageSize", storeListMovies.configuration.pageSize);
+});
 
 export { storeListMovies };

@@ -1,5 +1,6 @@
-/* global Vue,VueMaterial */
+/* global Vue,VueMaterial,location */
 
+import { configurationStore } from "./configurationStore.mjs";
 import { loaderComponent } from "./modules/loader/loader.mjs";
 import { errorComponent } from "./modules/error/error.mjs";
 import { flashComponent } from "./modules/flash/flash.mjs";
@@ -18,8 +19,16 @@ Vue.component("list-movies-movie", listMoviesMovieComponent);
 Vue.component("list-movies", listMoviesComponent);
 Vue.component("filmotheque", filmothequeComponent);
 
-// eslint-disable-next-line no-unused-vars
-const vm = new Vue({
-	el: "#filmotheque",
-	template: "<filmotheque />",
-});
+async function main() {
+
+	await configurationStore.load();
+
+	// eslint-disable-next-line no-unused-vars
+	const vm = new Vue({
+		el: "#filmotheque",
+		template: "<filmotheque />",
+	});
+}
+
+main().catch(
+	(error) => location.replace(`/error.html?message=${ error.message }`));
