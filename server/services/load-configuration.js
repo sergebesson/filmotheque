@@ -11,11 +11,11 @@ class LoadConfiguration {
 			path.join(process.cwd(), configurationFile);
 	}
 
-	load() {
+	async load() {
 		const configLoader = new ConfigLoader();
 		const layers = [ {
 			type: "file",
-			file: path.join(__dirname, "../data/configuration.json"),
+			file: path.join(__dirname, "../../data/configuration.json"),
 		} ];
 		if (this.file) {
 			layers.push({
@@ -37,28 +37,27 @@ class LoadConfiguration {
 				LOGS_FILE: "logs.file",
 			},
 		});
-		return configLoader.load(layers)
-			.then(() => {
-				if (configLoader.hasLayersInError()) {
-					const error = new Error("Le chargement de la configuration à rencontrer une erreur");
-					error.cause = configLoader.getLayersInError();
-					return Promise.reject(error);
-				}
+		await configLoader.load(layers);
 
-				/* Gestion de server.ssl.enable */
-				const sslEnable = configLoader.getValue("server.ssl.enable");
-				_.set(configLoader.config, "server.ssl.enable",
-					sslEnable && (
-						sslEnable === true ||
-						sslEnable === "true" ||
-						sslEnable === "TRUE" ||
-						sslEnable === 1 ||
-						sslEnable === "1"
-					),
-				);
+		if (configLoader.hasLayersInError()) {
+			const error = new Error("Le chargement de la configuration à rencontrer une erreur");
+			error.cause = configLoader.getLayersInError();
+			throw error;
+		}
 
-				return configLoader;
-			});
+		/* Gestion de server.ssl.enable */
+		const sslEnable = configLoader.getValue("server.ssl.enable");
+		_.set(configLoader.config, "server.ssl.enable",
+			sslEnable && (
+				sslEnable === true ||
+				sslEnable === "true" ||
+				sslEnable === "TRUE" ||
+				sslEnable === 1 ||
+				sslEnable === "1"
+			),
+		);
+
+		return configLoader;
 	}
 }
 

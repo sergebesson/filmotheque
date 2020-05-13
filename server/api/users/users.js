@@ -14,11 +14,12 @@ class Users {
 	constructor({ configLoader, logger }) {
 		this.logger = logger;
 		this.usersFile = configLoader.getValue("storage.usersFile");
+		this.users = {};
 	}
 
-	load() {
-		return fs.readFile(this.usersFile, "utf8")
-			.then((users) => JSON.parse(users));
+	async load() {
+		this.users = JSON.parse(await fs.readFile(this.usersFile, "utf8"));
+		return this.users;
 	}
 
 	static checkRouteAccessRights(user, route) {

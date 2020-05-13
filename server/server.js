@@ -1,38 +1,68 @@
 "use strict";
 
+const _ = require("lodash");
 const http = require("http");
 const https = require("https");
 const express = require("express");
 const fs = require("fs");
 const expressBasicAuth = require("express-basic-auth");
 
-const staticRoutesFactory = require("./routers/static.js");
-const apiRoutesFactory = require("./routers/api.js");
+const { LoadConfiguration } = require("./services/load-configuration.js");
+const { Logger } = require("./services/logger.js");
+
+const { staticRouterFactory } = require("./routers/static.js");
+const { apiRouterFactory } = require("./routers/api.js");
 
 class Server {
 
-	constructor(context) {
-		const { configLoader, logger, users } = context;
+	static async createServerAndStart(configurationFile) {
+		const server = new Server();
+		await server.initialize(configurationFile);
+		await server.start();
+
+		return server;
+	}
+
+	constructor() {
+		this.logger = null;
+		this.configuration = null;
+		this.app = express();
+		this.server = null;
+	}
+
+	async initialize(configurationFile) {
+		const loadConfiguration = new LoadConfiguration(configurationFile);
+		const configLoader = await loadConfiguration.load();
+
+		const logger = new Logger(configLoader.getValue("logs")).getLogger();
+		logger.log("info", "Configuration", configLoader.config);
+
+		const context = {
+			configLoader,
+			logger,
+			// les modules
+			filmotheque: null,
+			users: null,
+		};
+
 		this.logger = logger;
 		this.configuration = configLoader.getValue("server");
 
-		const routeApi = apiRoutesFactory(context);
-		const staticRoutes = staticRoutesFactory(context);
+		const staticRouter = staticRouterFactory(context);
+		const apiRouter = await apiRouterFactory(context);
 
-		this.app = express();
 
 		this.app.use((request, response, next) =>
 			this.checkUrlServerMiddleware(request, response, next));
 
-		this.app.use(expressBasicAuth({ users, challenge: true }));
+		this.app.use(expressBasicAuth({ users: _.mapValues(context.users.users, "passwd"), challenge: true }));
 
-		this.app.use(staticRoutes);
-		this.app.use("/api", routeApi);
+		this.app.use(staticRouter);
+		this.app.use("/api", apiRouter);
 
 		// Route d'erreur
 		this.app.use((error, request, response, next) =>
 			this.errorMiddleware(error, request, response, next));
-
 	}
 
 	start() {
@@ -80,14 +110,13 @@ class Server {
 						.then(() => {
 							/* eslint-disable-next-line no-console */
 							console.log("Server stopped");
-							/* eslint-disable-next-line no-process-exit */
-							process.exit(0);
+							process.exitCode = 0;
 						})
 						.catch((error) => {
 							/* eslint-disable-next-line no-console */
 							console.log(`impossible server stop : ${error.message}`);
 							/* eslint-disable-next-line no-process-exit */
-							process.exit(1);
+							process.exitCode = 1;
 						});
 				});
 
@@ -113,6 +142,7 @@ class Server {
 			});
 			this.server.on("close", () => {
 				this.logger.log("info", "Server is closed");
+				this.server = null;
 				resolve();
 			});
 			this.server.close();

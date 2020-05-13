@@ -29,6 +29,9 @@ const listMoviesMovieComponent = {
 			}
 			window.open(url, target || site);
 		},
+		getUrlDownload: function (id) {
+			return `/api/movies/${ id }/download/`;
+		},
 	},
 	template: `
 		<div>
@@ -59,7 +62,7 @@ const listMoviesMovieComponent = {
 					</md-button>
 				</div>
 			</md-list-item>
-			<a ref="download" :href="'/api/download/' + movie._id" style="display:none" />
+			<a ref="download" :href="getUrlDownload(movie._id)" style="display:none" />
 			<md-divider />
 		</div>
 	`,

@@ -9,7 +9,7 @@ function staticMiddleware(directory) {
 	return express.static(path.join(__dirname, "../..", directory));
 }
 
-module.exports = ({ configLoader }) => {
+function staticRouterFactory({ configLoader }) {
 
 	const debug = configLoader.getValue("vuejs.debug", false);
 
@@ -44,4 +44,6 @@ module.exports = ({ configLoader }) => {
 	router.use(staticMiddleware("www"));
 
 	return router;
-};
+}
+
+module.exports = { staticRouterFactory };
