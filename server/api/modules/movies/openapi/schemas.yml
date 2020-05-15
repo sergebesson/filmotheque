@@ -1,0 +1,93 @@
+bad_file:
+  type: object
+  additionalProperties: false
+  required: [ file_name, error ]
+  properties:
+    file_name:
+      description: Nom du fichier incorrect
+      type: string
+    error:
+      description: Message décrivant l'erreur de format du fichier
+      type: string
+
+initialization_report:
+  type: object
+  additionalProperties: false
+  required: [ bad_files, success, number_inserted_movies ]
+  properties:
+    bad_files:
+      description: Liste des fichiers dont le format est invalide et qui n'ont pas été insérés
+      type: array
+      items:
+        $ref: "#/bad_file"
+    success:
+      description: a true si l'insertion des documents c'est effectuée avec succès
+      type: boolean
+    number_inserted_movies:
+      description: nombre de films insérés
+      type: integer
+      format: int32
+    number_error_movies:
+      description: nombre de films non insérés suite à un format invalide
+      type: integer
+      format: int32
+    movies_in_error:
+      description: Liste des films non insérés suite à une erreur
+      type: object
+
+movie:
+  type: object
+  additionalProperties: false
+  required: [_id, title, file_name, date_added, size]
+  properties:
+    _id:
+      description: identifiant du film
+      type: string
+    title:
+      description: titre du film
+      type: string
+    categories:
+      description: "Catégories du film exemple : ActSciAve"
+      type: string
+      deprecated: true
+    file_name:
+      description: Nom du fichier du film
+      type: string
+    date_added:
+      description: date d'ajout du film
+      type: string
+      format: date
+    themoviedb_id:
+      description: identifiant du film sur https://www.themoviedb.org/
+      type: string
+    allocine_id:
+      description: identifiant du film sur http://www.allocine.fr/
+      type: string
+    imdb_id:
+      description: identifiant du film sur https://www.imdb.com/
+      type: string
+    size:
+      description: Taille du film en octet
+      type: integer
+      format: int64
+
+movie_list:
+  type: object
+  additionalProperties: false
+  required: [ page, page_size, total_pages, total_movies, movies ]
+  properties:
+    page:
+      $ref: "../../../openapi/schemas.yml#/page"
+    page_size:
+      $ref: "../../../openapi/schemas.yml#/page_size"
+    total_pages:
+      $ref: "../../../openapi/schemas.yml#/total_pages"
+    total_movies:
+      description: nombre de films au total
+      type: integer
+      format: int32
+    movies:
+      description: liste des films
+      type: array
+      items:
+        $ref: "schemas.yml#/movie"

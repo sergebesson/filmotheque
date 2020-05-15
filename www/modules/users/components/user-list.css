@@ -1,0 +1,68 @@
+
+.user-list {
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
+	border-radius: 8px 8px 0 0;
+	height: 100%;
+}
+
+.user-list .inactive {
+	opacity: .5;
+}
+
+.user-list .md-subheader {
+	background-color: var(--sb-filmotheque-over-background);
+	font-weight: bold;
+}
+.user-list .infinite-list {
+	flex: 1;
+	padding: 0;
+	overflow-y: scroll;
+}
+
+.user-list .infinite-list .md-list-item-content {
+	padding: 0;
+	min-height: 40px;
+}
+
+.user-list .md-subheader,
+.user-list .infinite-list .infinite-list-transition-item {
+	padding: 0px;
+	min-height: 40px;
+}
+
+.user-list .infinite-list .infinite-list-transition-item:nth-child(2n) {
+	background-color: #0000000a;
+}
+
+.user-list .infinite-list .infinite-list-transition-item .md-list-item-content.md-disabled {
+	color: var(--md-theme-default-text-primary-on-background);
+	font-weight: bolder;
+	background-color: #ff00001a;
+}
+
+.user-list .md-subheader .md-layout-item,
+.user-list .infinite-list .infinite-list-transition-item .md-layout-item {
+	padding: 0 10px;
+	font-size: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 40px;
+}
+
+.user-list .md-subheader .md-layout-item:first-child,
+.user-list .infinite-list .infinite-list-transition-item .md-layout-item:first-child {
+	padding: 5px;
+	padding-left: 15px;
+	min-width: 50px;
+	max-width: 50px;
+}
+
+.user-list .empty {
+	color: var(--md-theme-default-primary);
+	padding: 10px 16px;
+	font-size: 1.5em;
+	font-weight: bolder;
+}

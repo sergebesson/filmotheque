@@ -6,8 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "URL_SERVER=localhost node index.js",
+    "start:ip": "URL_SERVER=192.168.1.54 HOST=192.168.1.54 node index.js",
     "lint": "eslint '*.js' '**/*.js'",
     "lint:fix": "npm run lint -- --fix"
+  },
+  "bin": {
+    "migration_users": "scripts/migration_users.js"
   },
   "repository": {
     "type": "git",
@@ -20,23 +24,35 @@
   },
   "homepage": "https://github.com/sergebesson/sb-filmotheque#readme",
   "dependencies": {
-    "byte-size": "^6.2.0",
-    "escape-string-regexp": "^4.0.0",
+    "animate.css": "^4.1.0",
+    "byte-size": "^7.0.0",
+    "compression": "^1.7.4",
+    "decamelize-keys": "^1.1.0",
     "express": "^4.16.4",
     "express-basic-auth": "^1.2.0",
-    "lodash": "^4.17.11",
-    "markdown-it": "^10.0.0",
-    "moment": "^2.24.0",
-    "remove-accents": "^0.4.2",
+    "express-openapi-validator": "^3.16.4",
+    "fast-glob": "^3.2.4",
+    "lodash": "^4.17.19",
+    "markdown-it": "^11.0.0",
+    "moment": "^2.27.0",
+    "object-hash": "^2.0.3",
     "require-glob": "^3.2.0",
-    "sb-collection-file": "^0.4.0",
+    "require-yml": "^2.0.0",
+    "sb-collection-file": "^1.0.1",
     "sb-configuration-loader": "^1.0.0",
+    "serve-favicon": "^2.5.0",
+    "swagger-parser": "^9.0.1",
+    "swagger-ui-express": "^4.1.4",
+    "traverse": "^0.6.6",
     "vue": "^2.6.10",
     "vue-material": "^1.0.0-beta-11",
-    "winston": "^3.2.1"
+    "vue-router": "^3.3.4",
+    "vuelidate": "^0.7.5",
+    "winston": "^3.3.3",
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^7.4.0",
     "eslint-plugin-node": "^11.1.0"
   },
   "engines": {

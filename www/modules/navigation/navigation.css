@@ -1,0 +1,18 @@
+.navigation > .md-button {
+	margin: 0;
+}
+
+.navigation > .md-drawer {
+	width: 300px;
+}
+
+.navigation > .md-drawer > div {
+	height: 100%;
+}
+
+.navigation .router-link-active .md-list-item-button {
+	pointer-events: none;
+}
+.navigation .router-link-active .md-list-item-button:hover {
+	background-color: transparent !important;
+}

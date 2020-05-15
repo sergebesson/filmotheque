@@ -1,6 +1,7 @@
 # Perso
-data/filmotheque\.*
 .vscode
+data/filmotheque\.*
+data/users\.*
 data/ssl/serge.famille-besson.com
 
 # Logs

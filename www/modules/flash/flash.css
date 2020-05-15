@@ -3,3 +3,7 @@
 	background-color: var(--md-theme-default-primary);
 	color: var(--sb-filmotheque-text-light);
 }
+.md-dialog.flash .md-button.md-primary {
+	color: var(--md-theme-default-primary-on-background);
+	font-weight: bolder;
+}

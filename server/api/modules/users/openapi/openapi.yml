@@ -1,0 +1,90 @@
+tags:
+  - name: users
+    description: Gestion des utilisateurs
+
+paths:
+  /me:
+    summary: L'utilisateur connecté
+    description: récupération de l'utilisateur connecté
+    get:
+      tags: [ users ]
+      summary: informations de l'utilisateur connecté
+      description: récupération des informations de l'utilisateur connecté
+      responses:
+        200:
+          $ref: "responses.yml#/user_infos"
+
+  /{name}/avatar:
+    summary: avatar de l'utilisateur
+    description: Retourne l'avatar de l'utilisateur `name`
+    parameters:
+      - $ref: "parameters.yml#/name"
+    get:
+      tags: [ users ]
+      summary: avatar de l'utilisateur
+      description: Retourne l'avatar de l'utilisateur
+      responses:
+        200:
+          $ref: "responses.yml#/avatar"
+
+  /:
+    summary: Gestion des utilisateurs
+    description: Gestion des utilisateurs
+    get:
+      tags: [ users, administration ]
+      summary: Liste des utilisateurs
+      description: Récupération de la liste des utilisateurs, liste paginée
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/page_size"
+        - $ref: "#/components/parameters/search"
+      responses:
+        200:
+          $ref: "responses.yml#/user_list"
+    post:
+      tags: [ users, administration ]
+      summary: création d'un utilisateur
+      description: création d'un utilisateur
+      requestBody:
+        $ref: "request-bodies.yml#/user_create"
+      responses:
+        201:
+          $ref: "responses.yml#/user_detail"
+
+  /{name}:
+    summary: Gestion d'un utilisateur
+    description: Gestion d'un utilisateur
+    parameters:
+      - $ref: "parameters.yml#/name"
+    head:
+      tags: [ users, administration ]
+      summary: Vérifie l'existence de l'utilisateur
+      description: Vérifie l'existence de l'utilisateur
+      responses:
+        204:
+          description: l'utilisateur existe
+        404:
+          description: l'utilisateur n'existe pas
+    get:
+      tags: [ users, administration ]
+      summary: récupération d'un utilisateur
+      description: récupération d'un utilisateur
+      responses:
+        200:
+          $ref: "responses.yml#/user_detail"
+    patch:
+      tags: [ users, administration ]
+      summary: modification d'un utilisateur
+      description: modification d'un utilisateur
+      requestBody:
+        $ref: "request-bodies.yml#/user_update"
+      responses:
+        200:
+          $ref: "responses.yml#/user_detail"
+    delete:
+      tags: [ users, administration ]
+      summary: suppression d'un utilisateur
+      description: suppression d'un utilisateur
+      responses:
+        204:
+          description: utilisateur supprimé

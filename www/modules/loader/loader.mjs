@@ -12,7 +12,7 @@ const loaderComponent = {
 	components: { loaderCore },
 	template: `
 		<transition name="fade">
-			<loader-core />
+			<div id="loader"><loader-core /></div>
 		</transition>
 	`,
 };

@@ -1,0 +1,15 @@
+movie_library_infos:
+  type: object
+  additionalProperties: false
+  required: [ version, number_of_movies ]
+  properties:
+    version:
+      description: version de la filmotheque
+      type: string
+    number_of_movies:
+      description: nombre de films dans la filmotheque
+      type: integer
+      format: int32
+    flash:
+      description: flash d'information en html
+      type: string

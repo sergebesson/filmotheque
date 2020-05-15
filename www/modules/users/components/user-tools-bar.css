@@ -1,0 +1,15 @@
+.user-tools-bar {
+	display: flex;
+}
+
+.user-tools-bar .search {
+	flex: 1;
+}
+
+.user-tools-bar .user-create {
+	margin: 18px 0px 0px 10px;
+}
+
+.user-tools-bar .user-create .md-icon {
+	font-size: 40px !important;
+}

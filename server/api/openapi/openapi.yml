@@ -1,0 +1,13 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Api filmotheque
+servers: [{ url: /api }]
+tags:
+  - name: administration
+    description: Accès administrateur seulement
+components:
+  parameters:
+    $ref: "parameters.yml"
+  schemas:
+    $ref: "schemas.yml"

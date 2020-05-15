@@ -1,38 +1,32 @@
-/* global axios,localStorage,document */
+/* global localStorage,document */
 
-import { eventBus } from "../../eventBus.mjs";
+import { flashStore } from "../../stores/flash.store.mjs";
+
 
 const flashComponent = {
-	data: function () {
-		return {
-			show: false,
-			title: "",
-			content: "",
-		};
+	data: () => ({
+		flashStore,
+	}),
+	computed: {
+		title: function () {
+			return `Filmotheque version: ${ flashStore.infos.version }`;
+		},
 	},
 	created: function () {
 		this.showFlash();
 	},
 	methods: {
 		showFlash: async function () {
-			try {
-				const { data } = await axios({ method: "get", url: "api/infos" });
+			await flashStore.loadInfos();
+			document.title +=
+				` ${ flashStore.infos.version } - ${ flashStore.infos.number_of_movies } films`;
 
-				document.title += ` ${ data.version } - ${ data.nbMovies } films`;
-
-				const lastVersion = localStorage.getItem("last_version") || "0.0.0";
-				if (this.comparedVersion(data.version, lastVersion) > 0 && data.flash) {
-					this.title = `Filmotheque version: ${ data.version }`;
-					this.content = data.flash;
-					this.show = true;
-				}
-				localStorage.setItem("last_version", data.version);
-
-			} catch (error) {
-				eventBus.$emit(
-					"error", "Impossible de récupérer les informations de l'api", error,
-				);
+			const lastVersion = localStorage.getItem("last_version") || "0.0.0";
+			if (this.comparedVersion(flashStore.infos.version, lastVersion) > 0 &&
+				flashStore.infos.flash) {
+				flashStore.showFlash();
 			}
+			localStorage.setItem("last_version", flashStore.infos.version);
 		},
 		comparedVersion(version1, version2) {
 			const [ major1, minor1 ] = version1.split(".");
@@ -50,9 +44,9 @@ const flashComponent = {
 	},
 	template: `
 		<md-dialog-alert class="flash"
-			:md-active.sync="show"
+			:md-active.sync="flashStore.show"
 			:md-title="title"
-			:md-content="content"
+			:md-content="flashStore.infos.flash"
 		/>
 	`,
 };

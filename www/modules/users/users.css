@@ -1,0 +1,31 @@
+
+.users {
+	flex: 1;
+	display: flex;
+	overflow: hidden;
+}
+.users > div:first-child {
+	flex: 1;
+	min-width: 0;
+	padding: 5px 5px 0 5px;
+}
+
+.users > div:last-child {
+	transition: all 0.2s linear;
+}
+
+.users > div.user-detail-enter {
+	max-width: 0;
+	margin: 0;
+}
+
+.users > div.user-detail-leave-to {
+	transition-delay: .4s;
+	max-width: 0;
+	margin: 0;
+}
+
+.users .admin {
+	color: var(--md-theme-default-accent) !important;
+	font-weight: bolder;
+}

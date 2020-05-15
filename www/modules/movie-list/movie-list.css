@@ -1,0 +1,66 @@
+
+.movie-list {
+	flex: 1;
+	overflow-y: hidden;
+}
+
+.movie-list .infinite-list {
+	height: 100%;
+}
+
+.movie-list .md-subheader {
+	min-height: auto;
+}
+
+.movie-list .md-list-item {
+	margin-left: 16px;
+}
+
+.movie-list .md-list-item-content {
+	min-height: 50px !important;
+}
+
+.movie-list .md-list-item-button:hover {
+	background-color: var(--sb-filmotheque-over-background) !important;
+}
+
+.movie-list .md-list-action {
+	padding-right: 10px;
+}
+
+.movie-list .md-button {
+	margin: 0 -10px 0 0;
+	background-size: 24px;
+	background-position: center;
+	background-repeat: no-repeat
+}
+.movie-list .md-list-action .md-button .md-button-content {
+	width: 100%;
+	height: 100%;
+}
+
+.movie-list .md-button.themoviedb {
+	background-image: url("images/themoviedb.ico");
+}
+.movie-list .md-button.allocine {
+	background-image: url("images/allocine.ico");
+}
+.movie-list .md-button.imdb {
+	background-image: url("images/imdb.ico");
+}
+
+.movie-list .titre {
+	font-weight: bolder;
+}
+
+.movie-list .file {
+	font-size-adjust: 0.4;
+}
+
+.movie-list .empty {
+	color: var(--md-theme-default-primary);
+	flex: 1;
+	padding: 0 16px;
+	font-size: 1.5em;
+	font-weight: bolder;
+}

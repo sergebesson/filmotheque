@@ -1,17 +1,23 @@
 "use strict";
+/* eslint-disable no-console */
 
 const _ = require("lodash");
 const http = require("http");
 const https = require("https");
 const express = require("express");
+const compression = require("compression");
+const favicon = require("serve-favicon");
 const fs = require("fs");
-const expressBasicAuth = require("express-basic-auth");
+const requireGlob = require("require-glob");
+const path = require("path");
 
 const { LoadConfiguration } = require("./services/load-configuration.js");
 const { Logger } = require("./services/logger.js");
 
-const { staticRouterFactory } = require("./routers/static.js");
-const { apiRouterFactory } = require("./routers/api.js");
+const { publicRouterFactory } = require("./public/public.js");
+const { authentificationRouterFactory } = require("./authentification/authentification.js");
+const { staticRouterFactory } = require("./static/static.js");
+const { apiRouterFactory } = require("./api/api.js");
 
 class Server {
 
@@ -31,6 +37,26 @@ class Server {
 	}
 
 	async initialize(configurationFile) {
+		const context = await Server.initializeContext({ configurationFile });
+
+		this.logger = context.logger;
+		this.configuration = context.configLoader.getValue("server");
+
+		this.app.use(compression());
+		this.app.use((request, response, next) =>
+			this.checkUrlServerMiddleware(request, response, next));
+		this.app.use(favicon(path.join(__dirname, "../www", "filmotheque.ico")));
+		this.app.use(publicRouterFactory(context));
+		this.app.use(await authentificationRouterFactory(context));
+		this.app.use(staticRouterFactory(context));
+		this.app.use("/api", await apiRouterFactory(context));
+
+		// Route d'erreur
+		this.app.use((error, request, response, next) =>
+			this.errorMiddleware(error, request, response, next));
+	}
+
+	static async initializeContext({ configurationFile }) {
 		const loadConfiguration = new LoadConfiguration(configurationFile);
 		const configLoader = await loadConfiguration.load();
 
@@ -40,33 +66,46 @@ class Server {
 		const context = {
 			configLoader,
 			logger,
-			// les modules
-			filmotheque: null,
-			users: null,
 		};
 
-		this.logger = logger;
-		this.configuration = configLoader.getValue("server");
+		const stores = await requireGlob("stores/*.store.js");
+		await Promise.all(_.map(stores, async(store, storeName) => {
+			context[storeName] = new store[
+				storeName.charAt(0).toUpperCase() + storeName.slice(1)
+			](context);
+			return await context[storeName].initialize();
+		}));
 
-		const staticRouter = staticRouterFactory(context);
-		const apiRouter = await apiRouterFactory(context);
+		return context;
+	}
 
+	checkUrlServerMiddleware(request, response, next) {
+		return request.hostname !== this.configuration.url_server ?
+			response.status(403).send(`
+				<html>
+					<body>
+						<h1>accès refusé</h1>
+					</body>
+				</html>
+			`) :
+			next();
+	}
 
-		this.app.use((request, response, next) =>
-			this.checkUrlServerMiddleware(request, response, next));
-
-		this.app.use(expressBasicAuth({ users: _.mapValues(context.users.users, "passwd"), challenge: true }));
-
-		this.app.use(staticRouter);
-		this.app.use("/api", apiRouter);
-
-		// Route d'erreur
-		this.app.use((error, request, response, next) =>
-			this.errorMiddleware(error, request, response, next));
+	// eslint-disable-next-line no-unused-vars
+	errorMiddleware(error, request, response, next) {
+		this.logger.log("error", error.stack);
+		response.status(500).send(`
+			<html>
+				<body>
+					<h1>Une erreur grave est survenue</h1>
+					<hr>
+					<p>Description de l'erreur : ${error.message}</p>
+				</body>
+			</html>
+		`);
 	}
 
 	start() {
-		/* eslint-disable-next-line no-console */
 		console.log(); console.log("Server starting ...");
 		this.server = this.configuration.ssl.enable ?
 			https.createServer({
@@ -80,13 +119,11 @@ class Server {
 		return new Promise((resolve, reject) => {
 			this.server.on("error", (error) => {
 				const messageError = `impossible server start : ${error.message}`;
-				/* eslint-disable-next-line no-console */
 				console.log(messageError);
 				this.logger.log("error", messageError);
 				reject(error);
 			});
 			this.server.on("listening", () => {
-				/* eslint-disable-next-line no-console */
 				console.log("Server started");
 				this.logger.log("info", `start server to ${
 					this.configuration.host
@@ -104,7 +141,6 @@ class Server {
 				}/`);
 
 				process.on("SIGINT", () => {
-					/* eslint-disable-next-line no-console */
 					console.log(); console.log("Server stopping ...");
 					this.stop()
 						.then(() => {
@@ -113,9 +149,7 @@ class Server {
 							process.exitCode = 0;
 						})
 						.catch((error) => {
-							/* eslint-disable-next-line no-console */
 							console.log(`impossible server stop : ${error.message}`);
-							/* eslint-disable-next-line no-process-exit */
 							process.exitCode = 1;
 						});
 				});
@@ -147,32 +181,6 @@ class Server {
 			});
 			this.server.close();
 		});
-	}
-
-	checkUrlServerMiddleware(request, response, next) {
-		return request.hostname !== this.configuration.url_server ?
-			response.status(403).send(`
-				<html>
-					<body>
-						<h1>accès refusé</h1>
-					</body>
-				</html>
-			`) :
-			next();
-	}
-
-	// eslint-disable-next-line no-unused-vars
-	errorMiddleware(error, request, response, next) {
-		this.logger.log("error", error.stack);
-		response.status(500).send(`
-			<html>
-				<body>
-					<h1>Une erreur grave est survenue</h1>
-					<hr>
-					<p>Description de l'erreur : ${error.message}</p>
-				</body>
-			</html>
-		`);
 	}
 }
 

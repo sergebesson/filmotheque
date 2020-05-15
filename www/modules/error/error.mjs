@@ -1,22 +1,20 @@
 /* global _ */
 
-import { eventBus } from "../../eventBus.mjs";
+import { eventBus, eventName } from "../../eventBus.mjs";
 
 const errorComponent = {
-	data: function () {
-		return {
-			show: false,
-			message: "",
-			errorDescription: "",
-		};
-	},
+	data: () => ({
+		show: false,
+		message: "",
+		errorDescription: "",
+	}),
 	computed: {
 		content: function () {
 			return `${ this.message } <span>${ this.errorDescription }</span>`;
 		},
 	},
 	created: function () {
-		eventBus.$on("error", (message, error) => {
+		eventBus.$on(eventName.ERROR, (message, error) => {
 			this.showError(message, error);
 		});
 	},

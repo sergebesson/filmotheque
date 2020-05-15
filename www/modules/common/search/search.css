@@ -1,0 +1,19 @@
+
+.search .md-field.md-focused > label {
+	color: var(--sb-filmotheque-over-background);
+}
+
+.search > .md-field > .md-input {
+	padding: 0;
+	padding-right: 30px; /* pour le bouton effacer */
+	width: 88px;
+	min-width: 88px;
+}
+
+.search .spinner {
+	z-index: 2;
+	top: -26px;
+}
+.search .spinner.animated div {
+	background-color: white;
+}

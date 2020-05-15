@@ -1,0 +1,27 @@
+user_detail:
+  description: Détail de l'utilisateur
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/user_detail"
+
+user_infos:
+  description: informations de l'utilisateur connecté
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/user_infos"
+
+avatar:
+  description: l'avatar de l'utilisateur `name`
+  content:
+    "image/*":
+      schema:
+        $ref: "./schemas.yml#/avatar"
+
+user_list:
+  description: liste des utilisateurs
+  content:
+    application/json:
+      schema:
+        $ref: "./schemas.yml#/user_list"

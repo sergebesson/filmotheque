@@ -1,0 +1,16 @@
+sort:
+  name: sort
+  in: query
+  description: Permet le trie
+  allowReserved: true
+  schema:
+    type: string
+    enum: [ "date-added" ]
+
+movie_id:
+  name: movie_id
+  in: path
+  required: true
+  description: Identifiant du film
+  schema:
+    type: string
