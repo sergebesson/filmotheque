@@ -25,7 +25,7 @@ function staticRouterFactory({ configLoader }) {
 	/* vue router */
 	if (debug) {
 		router.use(
-			"/libs/vue/vue-router.min.js", staticMiddleware("vue-router/dist/vue-router.js"),
+			"/libs/vue-router/vue-router.min.js", staticMiddleware("vue-router/dist/vue-router.js"),
 		);
 	}
 	router.use("/libs/vue-router", staticMiddleware("vue-router/dist"));
