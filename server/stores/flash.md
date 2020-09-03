@@ -1,6 +1,6 @@
 # Filmotheque
 
-## nouvelle version 1.4.0
+## nouvelle version 1.4.1
 
 Cette nouvelle version apporte :
 
@@ -55,6 +55,10 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/sb-filmotheque)
 
 ## Changelog <a id="Changelog"></a>
+
+### 1.4.1
+
+* Correction d'un bug lors du chargement de vue-router avec debug à false
 
 ### 1.4.0
 
