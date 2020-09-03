@@ -6,3 +6,7 @@
 	height: 100%;
 	z-index: 10;
 }
+
+#loader .spinner {
+	max-width: 800px;
+}
