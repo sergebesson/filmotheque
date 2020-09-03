@@ -6,36 +6,44 @@
   <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
   <title>filmothèque</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
-  <link rel="stylesheet" href="css/vue-material.css">
-  <link rel="stylesheet" href="css/vue-material/theme/default.css">
-  <link rel="stylesheet" href="css/filmotheque.css">
-  <link rel="stylesheet" href="css/loader.css">
-  <link rel="stylesheet" href="css/list-movies.css">
+  <link rel="stylesheet" href="libs/animate/animate.min.css">
+  <link rel="stylesheet" href="libs/vue-material/vue-material.min.css">
+  <link rel="stylesheet" href="libs/vue-material/theme/default.css">
+
+  <link rel="stylesheet" href="modules/filmotheque/filmotheque.css">
+  <link rel="stylesheet" href="modules/loader/loader.css">
+  <link rel="stylesheet" href="modules/error/error.css">
+  <link rel="stylesheet" href="modules/flash/flash.css">
+  <link rel="stylesheet" href="modules/common/spinner/spinner.css">
+  <link rel="stylesheet" href="modules/common/infinite-list/infinite-list.css">
+  <link rel="stylesheet" href="modules/common/search/search.css">
+  <link rel="stylesheet" href="modules/navigation/navigation.css">
+  <link rel="stylesheet" href="modules/movie-list/movie-list.css">
+  <link rel="stylesheet" href="modules/users/users.css">
+  <link rel="stylesheet" href="modules/users/components/user-tools-bar.css">
+  <link rel="stylesheet" href="modules/users/components/user-list.css">
+  <link rel="stylesheet" href="modules/users/components/user-detail.css">
 </head>
 
 <body>
   <div id="loader">
-    <div class="loader">
-      <div>Chargement en cours ...</div>
-      <div class="escapingBallG"><div></div></div>
-    </div>
+    <div class="spinner animated"><div></div></div>
   </div>
   <div id="filmotheque"></div>
 
-  <script src="libs/vue.js"></script>
-  <script src="libs/vue-material.js"></script>
-  <script src="libs/lodash.js"></script>
-  <script src="libs/moment.js"></script>
+  <script src="libs/vue/vue.min.js"></script>
+  <script src="libs/vue/vue-router.min.js"></script>
+  <script src="libs/vue-material/vue-material.min.js"></script>
+  <script src="libs/vuelidate/vuelidate.min.js"></script>
+  <script src="libs/vuelidate/validators.min.js"></script>
+  <script src="libs/lodash/lodash.min.js"></script>
+  <script src="libs/moment/moment.min.js"></script>
   <script src="libs/moment/locale/fr.js"></script>
-  <script src="libs/axios.js"></script>
-  <script src="libs/byte-size.js"></script>
+  <script src="libs/axios/axios.min.js"></script>
+  <script src="libs/byte-size/index.js"></script>
+  <script src="libs/object-hash/object_hash.js"></script>
 
-  <script src="js/components/loader.js"></script>
-  <script src="js/components/error.js"></script>
-  <script src="js/components/flash.js"></script>
-  <script src="js/components/movie-item.js"></script>
-  <script src="js/components/list-movies-by-group.js"></script>
-  <script src="js/filmotheque.js"></script>
+  <script type="module" src="app.mjs"></script>
 </body>
 
 </html>

@@ -1,0 +1,47 @@
+tags:
+  - name: movies
+    description: Gestion des films
+paths:
+  /initialize:
+    summary: Initialise la base des films
+    description: Initialise la base des films depuis les fichiers
+    post:
+      tags: [ movies, administration ]
+      summary: Initialise la base des films
+      description: Initialise la base des films depuis les fichiers
+      requestBody:
+        description: "Pas de body"
+        content:
+          application/json: {}
+      responses:
+        200:
+          $ref: "responses.yml#/initialization_report"
+
+  /:
+    summary: Liste des films
+    description: Récupération de la liste des films, liste paginée
+    get:
+      tags: [ movies ]
+      summary: Liste des films
+      description: Récupération de la liste des films, liste paginée
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/page_size"
+        - $ref: "parameters.yml#/sort"
+        - $ref: "#/components/parameters/search"
+      responses:
+        200:
+          $ref: "responses.yml#/movie_list"
+
+  /{movie_id}/download:
+    summary: Téléchargement d'un film
+    description: Permet le téléchargement d'un film
+    parameters:
+      - $ref: "parameters.yml#/movie_id"
+    get:
+      tags: [ movies ]
+      summary: Téléchargement d'un film
+      description: Permet le téléchargement d'un film
+      responses:
+        200:
+          $ref: "responses.yml#/movie_download"

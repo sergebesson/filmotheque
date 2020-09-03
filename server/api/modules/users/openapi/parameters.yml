@@ -1,0 +1,7 @@
+name:
+  name: name
+  in: path
+  required: true
+  description: nom de l'utilisateur
+  schema:
+    type: string

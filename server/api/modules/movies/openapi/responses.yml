@@ -1,0 +1,21 @@
+initialization_report:
+  description: Rapport de l'initialisation
+  content:
+    application/json:
+      schema:
+        $ref: "schemas.yml#/initialization_report"
+
+movie_list:
+  description: liste des films
+  content:
+    application/json:
+      schema:
+        $ref: "schemas.yml#/movie_list"
+
+movie_download:
+  description: téléchargement du film
+  content:
+    "video/*":
+      schema:
+        type: string
+        format: binary

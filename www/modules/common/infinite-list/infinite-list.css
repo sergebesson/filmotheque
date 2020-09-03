@@ -1,0 +1,22 @@
+
+.infinite-list {
+	overflow-y: auto;
+	scroll-snap-type: x mandatory;
+}
+
+.infinite-list-transition-enter, .infinite-list-transition-leave-to {
+	opacity: 0;
+	transform: translateY(-100px);
+}
+.infinite-list-transition-leave-active {
+	position: absolute;
+}
+.infinite-list-transition-item {
+	scroll-snap-align: start;
+	transition: all 0.5s;
+}
+
+.infinite-list .spinner {
+	padding: 10px 0px;
+	min-height: 25px;
+}

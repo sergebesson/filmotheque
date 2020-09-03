@@ -1,0 +1,14 @@
+tags:
+  - name: infos
+    description: Information générales sur la filmothéque
+paths:
+  /:
+    summary: informations sur la filmothéque
+    description: récupération d'informations générales sur la filmothéque
+    get:
+      tags: [ infos ]
+      summary: informations sur la filmothéque
+      description: récupération d'informations générales sur la filmothéque
+      responses:
+        200:
+          $ref: "responses.yml#/movie_library_infos"

@@ -1,0 +1,6 @@
+movie_library_infos:
+  description: informations sur la filmothéque
+  content:
+    application/json:
+      schema:
+        $ref: "schemas.yml#/movie_library_infos"

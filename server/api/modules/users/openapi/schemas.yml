@@ -1,0 +1,131 @@
+name:
+  description: Nom de l'utilisateur
+  type: string
+password:
+  description: mot de passe de l'utilisateur
+  type: string
+  minLength: 4
+pseudo:
+  description: pseudo de l'utilisateur
+  type: string
+active:
+  description: Utilisateur actif
+  type: boolean
+  default: true
+description:
+  description: description de l'utilisateur
+  type: string
+sexe:
+  description: Sexe de l'utilisateur
+  type: string
+  enum: [ F, M ]
+avatar_id:
+  description: identifiant de l'avatar
+  type: string
+avatar_format:
+  description: format de l'avatar (png, svg, etc...)
+  type: string
+  default: svg
+is_admin:
+  description: l'utilisateur est-il administrateur ?
+  type: boolean
+
+user_infos:
+  type: object
+  additionalProperties: false
+  required: [ name, pseudo, sexe ]
+  properties:
+    name:
+      $ref: "#/name"
+    pseudo:
+      $ref: "#/pseudo"
+    sexe:
+      $ref: "#/sexe"
+    is_admin:
+      $ref: "#/is_admin"
+
+user_detail:
+  type: object
+  additionalProperties: false
+  required: [ name, password, pseudo, active, description, sexe, is_admin ]
+  properties:
+    name:
+      $ref: "#/name"
+    password:
+      $ref: "#/password"
+    pseudo:
+      $ref: "#/pseudo"
+    active:
+      $ref: "#/active"
+    description:
+      $ref: "#/description"
+    sexe:
+      $ref: "#/sexe"
+    is_admin:
+      $ref: "#/is_admin"
+
+user_create:
+  type: object
+  additionalProperties: false
+  required: [ name, password, pseudo, description, sexe ]
+  properties:
+    name:
+      $ref: "#/name"
+    password:
+      $ref: "#/password"
+    pseudo:
+      $ref: "#/pseudo"
+    active:
+      $ref: "#/active"
+    description:
+      $ref: "#/description"
+    sexe:
+      $ref: "#/sexe"
+    avatar_id:
+      $ref: "#/avatar_id"
+    avatar_format:
+      $ref: "#/avatar_format"
+
+user_update:
+  type: object
+  additionalProperties: false
+  properties:
+    password:
+      $ref: "#/password"
+    pseudo:
+      $ref: "#/pseudo"
+    active:
+      $ref: "#/active"
+    description:
+      $ref: "#/description"
+    sexe:
+      $ref: "#/sexe"
+    avatar_id:
+      $ref: "#/avatar_id"
+    avatar_format:
+      $ref: "#/avatar_format"
+
+avatar:
+  type: string
+  format: binary
+
+user_list:
+  type: object
+  additionalProperties: false
+  required: [ page, page_size, total_pages, total_users, users ]
+  properties:
+    page:
+      $ref: "../../../openapi/schemas.yml#/page"
+    page_size:
+      $ref: "../../../openapi/schemas.yml#/page_size"
+    total_pages:
+      $ref: "../../../openapi/schemas.yml#/total_pages"
+    total_users:
+      description: nombre d'utilisateur au total
+      type: integer
+      format: int32
+    users:
+      description: liste des utilisateurs
+      type: array
+      items:
+        $ref: "#/user_detail"

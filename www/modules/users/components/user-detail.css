@@ -1,0 +1,62 @@
+.user-detail {
+	flex-basis: 400px;
+	max-width: 400px;
+	margin: 5px 5px 0 5px;
+	border-radius: 8px 8px 0 0px;
+}
+
+.user-detail form {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.user-detail .md-toolbar {
+	padding: 0;
+}
+
+.user-detail .md-toolbar .md-field {
+	flex: 1;
+	margin-left: 8px;
+	min-width: 150px;
+}
+
+.user-detail .md-toolbar .md-field input {
+	min-width: 150px;
+}
+
+.user-detail .md-title {
+	flex: 1;
+}
+
+.user-detail .dirty input,
+.user-detail .dirty .md-switch label {
+		font-weight: bolder;
+}
+
+.user-detail .md-switch label {
+	top: 0px;
+}
+
+.user-detail .md-invalid input {
+	color: red !important;
+	-webkit-text-fill-color: unset !important;
+}
+
+@media (max-width:600px) {
+	.user-detail {
+		flex: 1;
+		max-width: calc(100% - 10px);
+	}
+}
+
+.user-detail fieldset {
+	border: none;
+	margin: 0 15px;
+	overflow-y: auto;
+}
+
+.user-detail .spinner {
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
