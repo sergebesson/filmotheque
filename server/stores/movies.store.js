@@ -5,13 +5,13 @@ const path = require("path");
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const fs = require("fs").promises;
 
-const { CollectionFile } = require("sb-collection-file");
+const { JsonDb } = require("@sbesson/json-db");
 
 class MoviesStore {
 	constructor({ configLoader, logger }) {
 		const directory = configLoader.getValue("storage.databaseDirectory");
 		this.logger = logger;
-		this.structureCollectionFile = {
+		this.structureJsonDb = {
 			jsonSchema: {
 				type: "object",
 				properties: {
@@ -31,15 +31,15 @@ class MoviesStore {
 			searchIndex: [ "title", "categories" ],
 		};
 
-		this.collectionFile = new CollectionFile(path.join(directory, "filmotheque"));
+		this.jsonDb = new JsonDb(path.join(directory, "filmotheque"));
 	}
 
 	async initialize() {
-		return await this.collectionFile.loadCollection();
+		return await this.jsonDb.loadCollection();
 	}
 
 	async importMovies({ directory }) {
-		await this.collectionFile.create(this.structureCollectionFile);
+		await this.jsonDb.create(this.structureJsonDb);
 		const regExp = /\s*(.*\S)\s*(\(\d\d-\d\d\)|\(\d{4}\))\s*(\S*)\s*(.+)/;
 
 		const fileNames = await fs.readdir(directory);
@@ -66,7 +66,7 @@ class MoviesStore {
 				this.logger.log("warn", `films ${ fileName } en erreur: ${ error.message}`);
 			}
 		}));
-		const resultImport = await this.collectionFile.import(_.compact(movies));
+		const resultImport = await this.jsonDb.import(_.compact(movies));
 
 		return {
 			bad_files: badFiles,
@@ -79,11 +79,11 @@ class MoviesStore {
 
 	search({ query, search }) {
 		// a étudier : accent-folding
-		return this.collectionFile.collection.search({ query, search });
+		return this.jsonDb.collection.search({ query, search });
 	}
 
 	get({ id }) {
-		return this.collectionFile.collection.getById(id);
+		return this.jsonDb.collection.getById(id);
 	}
 }
 
