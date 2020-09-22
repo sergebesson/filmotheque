@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/sergebesson/sb-filmotheque#readme",
   "dependencies": {
+    "@sbesson/configuration-loader": "^1.0.1",
     "animate.css": "^4.1.0",
     "byte-size": "^7.0.0",
     "compression": "^1.7.4",
@@ -39,7 +40,6 @@
     "require-glob": "^3.2.0",
     "require-yml": "^2.0.0",
     "sb-collection-file": "^1.0.1",
-    "sb-configuration-loader": "^1.0.0",
     "serve-favicon": "^2.5.0",
     "swagger-parser": "^9.0.1",
     "swagger-ui-express": "^4.1.4",
