@@ -1,5 +1,5 @@
 {
-  "name": "sb-filmotheque",
+  "name": "@sbesson/filmotheque",
   "version": "1.4.2",
   "description": "Présentation de mes films",
   "main": "index.js",
