@@ -1,6 +1,6 @@
 # Filmotheque
 
-## nouvelle version 1.4.2
+## nouvelle version 1.4.x
 
 Cette nouvelle version apporte :
 
@@ -55,6 +55,12 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/sb-filmotheque)
 
 ## Changelog <a id="Changelog"></a>
+
+### 1.4.3
+
+* renommage du projet de `sb-filmotheque` à `@sbesson/filmotheque`
+* utilisation de `@sbesson/configuration-loader` au lieu de `sb-configuration-loader`
+* utilisation de `@sbesson/json-db` au lieu de `sb-collection-file`
 
 ### 1.4.2
 
