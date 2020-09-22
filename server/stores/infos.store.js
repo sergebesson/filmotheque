@@ -27,7 +27,7 @@ class InfosStore {
 	async get() {
 		return {
 			version,
-			number_of_movies: this.context.moviesStore.collectionFile.collection.length,
+			number_of_movies: this.context.moviesStore.jsonDb.collection.length,
 			flash: this.flash,
 		};
 	}

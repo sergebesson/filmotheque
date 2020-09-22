@@ -42,7 +42,7 @@ function routesError({ router, logger }) {
 			});
 		}
 
-		// Erreur de sb-collection-file
+		// Erreur de json-db
 		if (error.reasons) {
 			logger.log("error", "reasons", error.reasons);
 		}

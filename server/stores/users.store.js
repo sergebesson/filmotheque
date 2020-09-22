@@ -4,14 +4,14 @@ const _ = require("lodash");
 const path = require("path");
 const { safeCompare } = require("express-basic-auth");
 
-const { CollectionFile } = require("sb-collection-file");
+const { JsonDb } = require("@sbesson/json-db");
 
 const { User } = require("./user");
 
 class UsersStore {
 	constructor({ configLoader }) {
 		const directory = configLoader.getValue("storage.databaseDirectory");
-		this.structureCollectionFile = {
+		this.structureJsonDb = {
 			idName: "name",
 			jsonSchema: {
 				type: "object",
@@ -31,7 +31,7 @@ class UsersStore {
 			searchIndex: [ "name", "pseudo", "description" ],
 		};
 
-		this.collectionFile = new CollectionFile(path.join(directory, "users"));
+		this.jsonDb = new JsonDb(path.join(directory, "users"));
 
 		this._loginUser = null;
 		this._usersExpressBasicAuth = null;
@@ -39,13 +39,13 @@ class UsersStore {
 
 	async initialize() {
 		try {
-			await this.collectionFile.loadCollection();
+			await this.jsonDb.loadCollection();
 		} catch (error) {
 			if (error.code !== "ENOENT") {
 				throw error;
 			}
-			await this.collectionFile.create(this.structureCollectionFile);
-			await this.collectionFile.insert({
+			await this.jsonDb.create(this.structureJsonDb);
+			await this.jsonDb.insert({
 				name: "serge",
 				password: "achanger",
 				pseudo: "Yod",
@@ -58,7 +58,7 @@ class UsersStore {
 	}
 
 	set loginUser(name) {
-		const user = this.collectionFile.collection.getById(name);
+		const user = this.jsonDb.collection.getById(name);
 		if (!user) {
 			throw new Error(`loginUser - utilisateur ${ name } inconnu`);
 		}
@@ -70,7 +70,7 @@ class UsersStore {
 
 	checkAuthentification({ name: nameInput, password: passwordInput }) {
 		return _.some(
-			this.collectionFile.collection.find({ active: true }),
+			this.jsonDb.collection.find({ active: true }),
 			({ name, password }) =>
 				// eslint-disable-next-line no-bitwise
 				safeCompare(nameInput, name) & safeCompare(passwordInput, password),
@@ -78,12 +78,12 @@ class UsersStore {
 	}
 
 	search({ query, search }) {
-		return this.collectionFile.collection.search({ query, search })
+		return this.jsonDb.collection.search({ query, search })
 			.map((user) => new User(user).json);
 	}
 
 	getUserByName({ name }) {
-		const user = this.collectionFile.collection.getById(name);
+		const user = this.jsonDb.collection.getById(name);
 		if (!user) {
 			return null;
 		}
@@ -91,22 +91,22 @@ class UsersStore {
 	}
 
 	async insert(userInfos) {
-		const { document: user } = await this.collectionFile.insert(new User(userInfos).jsonAll);
+		const { document: user } = await this.jsonDb.insert(new User(userInfos).jsonAll);
 		return new User(user);
 	}
 
 	async update(userUpdateInfos) {
-		const userInfos = this.collectionFile.collection.getById(userUpdateInfos.name);
+		const userInfos = this.jsonDb.collection.getById(userUpdateInfos.name);
 		if (!userInfos) {
 			throw new Error("userNotfound");
 		}
 		const user = new User({ ...userInfos, ..._.omitBy(userUpdateInfos, _.isUndefined) });
-		const { document: userUpdate } = await this.collectionFile.update(user.jsonAll);
+		const { document: userUpdate } = await this.jsonDb.update(user.jsonAll);
 		return new User(userUpdate);
 	}
 
 	async delete({ name }) {
-		const userInfos = this.collectionFile.collection.getById(name);
+		const userInfos = this.jsonDb.collection.getById(name);
 		if (!userInfos) {
 			throw new Error("userNotfound");
 		}
@@ -114,7 +114,7 @@ class UsersStore {
 		if (user.isAdmin) {
 			throw new Error("unauthorized");
 		}
-		await this.collectionFile.delete(name);
+		await this.jsonDb.delete(name);
 	}
 }
 
