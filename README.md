@@ -1,4 +1,4 @@
-# sb-filmotheque
+# filmotheque
 
 Présentation de mes films
 
@@ -122,7 +122,7 @@ On doit trouver également à la racine du module un répertoire `openapi` qui d
 
 Le context contient :
 
-* **configLoader** : object de type ConfigLoader (`sb-configuration-loader`) permettant de récupérer les options de configuration.
+* **configLoader** : object de type ConfigLoader (`@sbesson/configuration-loader`) permettant de récupérer les options de configuration.
 * **logger** : logger (`winston`)
 * **\<store>** : Accès à l'instance des stores.
 

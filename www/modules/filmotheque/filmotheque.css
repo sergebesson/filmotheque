@@ -1,7 +1,7 @@
 
 :root {
-	--sb-filmotheque-over-background: #8b451333;
-	--sb-filmotheque-text-light: #dddddd;
+	--filmotheque-over-background: #8b451333;
+	--filmotheque-text-light: #dddddd;
 	--md-theme-default-primary-on-background: #dddddd;
 	--md-theme-default-text-primary-on-background: saddlebrown;
 	--md-theme-default-primary: saddlebrown;
@@ -70,7 +70,7 @@ body, .filmotheque {
 
 .filmotheque .md-dialog-title {
 	padding: 12px 24px;
-	border-bottom: 1px solid var(--sb-filmotheque-text-light);
+	border-bottom: 1px solid var(--filmotheque-text-light);
 }
 
 .fade-enter-active, .fade-leave-active {
