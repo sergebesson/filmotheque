@@ -21,7 +21,7 @@
 }
 
 .movie-list .md-list-item-button:hover {
-	background-color: var(--sb-filmotheque-over-background) !important;
+	background-color: var(--filmotheque-over-background) !important;
 }
 
 .movie-list .md-list-action {

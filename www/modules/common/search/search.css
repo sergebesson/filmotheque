@@ -1,6 +1,6 @@
 
 .search .md-field.md-focused > label {
-	color: var(--sb-filmotheque-over-background);
+	color: var(--filmotheque-over-background);
 }
 
 .search > .md-field > .md-input {

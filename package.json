@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sergebesson/sb-filmotheque.git"
+    "url": "git+https://github.com/sergebesson/filmotheque.git"
   },
   "author": "Serge BESSON <serge@famille-besson.com>",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/sergebesson/sb-filmotheque/issues"
+    "url": "https://github.com/sergebesson/filmotheque/issues"
   },
-  "homepage": "https://github.com/sergebesson/sb-filmotheque#readme",
+  "homepage": "https://github.com/sergebesson/filmotheque#readme",
   "dependencies": {
     "@sbesson/configuration-loader": "^1.0.1",
     "@sbesson/json-db": "^1.0.3",

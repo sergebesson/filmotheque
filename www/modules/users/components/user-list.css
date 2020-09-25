@@ -12,7 +12,7 @@
 }
 
 .user-list .md-subheader {
-	background-color: var(--sb-filmotheque-over-background);
+	background-color: var(--filmotheque-over-background);
 	font-weight: bold;
 }
 .user-list .infinite-list {

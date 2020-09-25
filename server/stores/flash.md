@@ -52,9 +52,13 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 
 ## Sources
 
-Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/sb-filmotheque)
+Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/filmotheque)
 
 ## Changelog <a id="Changelog"></a>
+
+### 1.4.4
+
+* suppression du préfixe `sb-` dans les variables css
 
 ### 1.4.3
 
