@@ -7,17 +7,18 @@ const requireYml = require("require-yml");
 const traverse = require("traverse");
 const swaggerParser = require("swagger-parser");
 const swaggerUiExpress = require("swagger-ui-express");
-const {
-	OpenApiValidator,
-	BadRequest,
-	Forbidden,
-	InternalServerError,
-	MethodNotAllowed,
-	NotFound,
-	RequestEntityToLarge,
-	Unauthorized,
-	UnsupportedMediaType,
-} = require("express-openapi-validator");
+// const {
+// 	OpenApiValidator,
+// 	BadRequest,
+// 	Forbidden,
+// 	InternalServerError,
+// 	MethodNotAllowed,
+// 	NotFound,
+// 	RequestEntityToLarge,
+// 	Unauthorized,
+// 	UnsupportedMediaType,
+// } = require("express-openapi-validator");
+const expressOpenapiValidator = require("express-openapi-validator");
 
 class OpenapiService {
 	static async install(router) {
@@ -36,11 +37,13 @@ class OpenapiService {
 			customCss: ".swagger-ui section.models, .swagger-ui .topbar { display: none }",
 		}));
 
-		await new OpenApiValidator({
-			apiSpec: apiSpec,
-			validateRequests: true,
-			validateResponses: true,
-		}).install(router);
+		router.use(
+			expressOpenapiValidator.middleware({
+				apiSpec: apiSpec,
+				validateRequests: true,
+				validateResponses: true,
+			}),
+		);
 	}
 
 	static async getApiSpec() {
@@ -82,21 +85,21 @@ class OpenapiService {
 
 	static middlewareError({ logger }) {
 		return (error, request, response, next) => {
-			if (error instanceof BadRequest) {
+			if (error instanceof expressOpenapiValidator.error.BadRequest) {
 				return response.status(error.status).json({
 					status: error.status, error_description: error.name, errors: error.errors,
 				});
 			}
 
-			if (error instanceof Forbidden ||
-					error instanceof MethodNotAllowed ||
-					error instanceof NotFound ||
-					error instanceof RequestEntityToLarge ||
-					error instanceof Unauthorized ||
-					error instanceof UnsupportedMediaType ||
-					error instanceof InternalServerError) {
+			if (error instanceof expressOpenapiValidator.error.Forbidden ||
+					error instanceof expressOpenapiValidator.error.MethodNotAllowed ||
+					error instanceof expressOpenapiValidator.error.NotFound ||
+					error instanceof expressOpenapiValidator.error.RequestEntityToLarge ||
+					error instanceof expressOpenapiValidator.error.Unauthorized ||
+					error instanceof expressOpenapiValidator.error.UnsupportedMediaType ||
+					error instanceof expressOpenapiValidator.error.InternalServerError) {
 
-				if (error instanceof InternalServerError) {
+				if (error instanceof expressOpenapiValidator.error.InternalServerError) {
 					logger.log("error", `openapi validator path ${ error.path }`);
 					logger.log("error", "openapi validator errors", error.errors);
 					logger.log("error", error.stack);
