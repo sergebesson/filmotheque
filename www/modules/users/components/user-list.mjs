@@ -55,12 +55,12 @@ const userListComponent = {
 				<infinite-list :store-list="userListStore" v-else>
 					<div v-for="user in userListStore.users" :key="user.name" class="infinite-list-transition-item">
 						<md-list-item @click="onClick(user)" :disabled="selectedUserName === user.name">
-						<transition
+							<transition
 								enter-active-class="animate__animated animate__flash"
 								mode="out-in"
 							>
 								<div :key="hashUser(user)" class="md-layout" style="width: 100%">
-								<avatar :name="user.name" class="md-layout-item"/>
+									<avatar :name="user.name" class="md-layout-item"/>
 									<div :class="['md-layout-item', { admin: user.is_admin }, { inactive: !user.active }]">
 										{{ user.name }}
 									</div>
