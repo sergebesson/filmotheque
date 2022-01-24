@@ -56,6 +56,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.5
+
+* Passage à node 16.13 TLS
+
 ### 1.4.4
 
 * suppression du préfixe `sb-` dans les variables css
