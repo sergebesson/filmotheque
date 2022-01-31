@@ -7,17 +7,6 @@ const requireYml = require("require-yml");
 const traverse = require("traverse");
 const swaggerParser = require("swagger-parser");
 const swaggerUiExpress = require("swagger-ui-express");
-// const {
-// 	OpenApiValidator,
-// 	BadRequest,
-// 	Forbidden,
-// 	InternalServerError,
-// 	MethodNotAllowed,
-// 	NotFound,
-// 	RequestEntityToLarge,
-// 	Unauthorized,
-// 	UnsupportedMediaType,
-// } = require("express-openapi-validator");
 const expressOpenapiValidator = require("express-openapi-validator");
 
 class OpenapiService {
@@ -94,7 +83,7 @@ class OpenapiService {
 			if (error instanceof expressOpenapiValidator.error.Forbidden ||
 					error instanceof expressOpenapiValidator.error.MethodNotAllowed ||
 					error instanceof expressOpenapiValidator.error.NotFound ||
-					error instanceof expressOpenapiValidator.error.RequestEntityToLarge ||
+					error instanceof expressOpenapiValidator.error.RequestEntityTooLarge ||
 					error instanceof expressOpenapiValidator.error.Unauthorized ||
 					error instanceof expressOpenapiValidator.error.UnsupportedMediaType ||
 					error instanceof expressOpenapiValidator.error.InternalServerError) {

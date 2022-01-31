@@ -56,6 +56,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.6
+
+* Correction d'un bug sur la gestion des erreurs openapi
+
 ### 1.4.5
 
 * Passage à node 16.13 TLS
