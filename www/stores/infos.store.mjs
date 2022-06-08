@@ -2,7 +2,7 @@
 
 import { eventBus, eventName } from "../eventBus.mjs";
 
-const flashStore = {
+const infosStore = {
 	state: {
 		show: false,
 		infos: {},
@@ -32,4 +32,4 @@ const flashStore = {
 	},
 };
 
-export { flashStore };
+export { infosStore };

@@ -28,6 +28,12 @@ const searchComponent = {
 		"storeList.loading": function (loading) {
 			this.searchInProgress = this.searchInProgress && loading;
 		},
+		"storeList.search": function (storeSearch) {
+			if (this.search === storeSearch) {
+				return;
+			}
+			this.search = storeSearch;
+		},
 	},
 	created: function () {
 		this.search = this.storeList.search;
@@ -36,9 +42,9 @@ const searchComponent = {
 		<div class="search">
 			<md-field md-inline md-clearable>
 				<label>Rechercher...</label>
-				<md-input v-model.trim="search" autofocus :disabled="storeList.updating"></md-input>
+				<md-input v-model.trim="search" autofocus :disabled="storeList.loading && !searchInProgress"></md-input>
 			</md-field>
-			<spinner :animate="searchInProgress || storeList.updating" />
+			<spinner :animate="searchInProgress" />
 		</div>
 	`,
 };
