@@ -56,6 +56,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.7
+
+* Ajout d'un bouton pour charger tous les films d'un coup
+
 ### 1.4.6
 
 * Correction d'un bug sur la gestion des erreurs openapi
