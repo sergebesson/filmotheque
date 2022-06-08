@@ -1,15 +1,14 @@
 /* global localStorage,document */
 
-import { flashStore } from "../../stores/flash.store.mjs";
-
+import { infosStore } from "../../stores/infos.store.mjs";
 
 const flashComponent = {
 	data: () => ({
-		flashStore,
+		infosStore,
 	}),
 	computed: {
 		title: function () {
-			return `Filmotheque version: ${ flashStore.infos.version }`;
+			return `Filmotheque version: ${infosStore.infos.version}`;
 		},
 	},
 	created: function () {
@@ -17,16 +16,15 @@ const flashComponent = {
 	},
 	methods: {
 		showFlash: async function () {
-			await flashStore.loadInfos();
-			document.title +=
-				` ${ flashStore.infos.version } - ${ flashStore.infos.number_of_movies } films`;
+			await infosStore.loadInfos();
+			document.title += ` ${infosStore.infos.version} - ${infosStore.infos.number_of_movies} films`;
 
 			const lastVersion = localStorage.getItem("last_version") || "0.0.0";
-			if (this.comparedVersion(flashStore.infos.version, lastVersion) > 0 &&
-				flashStore.infos.flash) {
-				flashStore.showFlash();
+			if (this.comparedVersion(infosStore.infos.version, lastVersion) > 0 &&
+				infosStore.infos.flash) {
+				infosStore.showFlash();
 			}
-			localStorage.setItem("last_version", flashStore.infos.version);
+			localStorage.setItem("last_version", infosStore.infos.version);
 		},
 		comparedVersion(version1, version2) {
 			const [ major1, minor1 ] = version1.split(".");
@@ -44,9 +42,9 @@ const flashComponent = {
 	},
 	template: `
 		<md-dialog-alert class="flash"
-			:md-active.sync="flashStore.show"
+			:md-active.sync="infosStore.show"
 			:md-title="title"
-			:md-content="flashStore.infos.flash"
+			:md-content="infosStore.infos.flash"
 		/>
 	`,
 };

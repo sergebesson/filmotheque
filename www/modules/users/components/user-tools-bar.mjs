@@ -6,8 +6,8 @@ const userToolsBarComponent = {
 		userListStore,
 	}),
 	template: `
-		<div class="user-tools-bar">
-			<search :store-list="userListStore" />
+		<div class="user-tools-bar tools-bar">
+			<search class="tools-bar-flex1" :store-list="userListStore" />
 			<user-create />
 		</div>
 	`,

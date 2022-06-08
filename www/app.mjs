@@ -14,7 +14,6 @@ import { navigationComponent } from "./modules/navigation/navigation.mjs";
 import { avatarComponent } from "./modules/avatar/avatar.mjs";
 import { profileComponent } from "./modules/profile/profile.mjs";
 import { movieListComponent } from "./modules/movie-list/movie-list.mjs";
-import { movieListItemComponent } from "./modules/movie-list/components/movie-list-item.mjs";
 import { userCreateComponent } from "./modules/users/components/user-create.mjs";
 import { filmothequeComponent } from "./modules/filmotheque/filmotheque.mjs";
 
@@ -33,7 +32,6 @@ Vue.component("navigation", navigationComponent);
 Vue.component("avatar", avatarComponent);
 Vue.component("profile", profileComponent);
 Vue.component("movie-list", movieListComponent);
-Vue.component("movie-list-item", movieListItemComponent);
 Vue.component("user-create", userCreateComponent);
 Vue.component("filmotheque", filmothequeComponent);
 

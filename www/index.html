@@ -1,49 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport" />
+		<title>filmothèque</title>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons"
+		/>
+		<link rel="stylesheet" href="libs/animate/animate.min.css" />
+		<link rel="stylesheet" href="libs/vue-material/vue-material.min.css" />
+		<link rel="stylesheet" href="libs/vue-material/theme/default.css" />
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
-  <title>filmothèque</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
-  <link rel="stylesheet" href="libs/animate/animate.min.css">
-  <link rel="stylesheet" href="libs/vue-material/vue-material.min.css">
-  <link rel="stylesheet" href="libs/vue-material/theme/default.css">
+		<link rel="stylesheet" href="modules/filmotheque/filmotheque.css" />
+		<link rel="stylesheet" href="modules/loader/loader.css" />
+		<link rel="stylesheet" href="modules/error/error.css" />
+		<link rel="stylesheet" href="modules/flash/flash.css" />
+		<link rel="stylesheet" href="modules/common/spinner/spinner.css" />
+		<link rel="stylesheet" href="modules/common/infinite-list/infinite-list.css" />
+		<link rel="stylesheet" href="modules/common/search/search.css" />
+		<link rel="stylesheet" href="modules/navigation/navigation.css" />
+		<link rel="stylesheet" href="modules/movie-list/movie-list.css" />
+		<link rel="stylesheet" href="modules/users/users.css" />
+		<link rel="stylesheet" href="modules/users/components/user-list.css" />
+		<link rel="stylesheet" href="modules/users/components/user-detail.css" />
+	</head>
 
-  <link rel="stylesheet" href="modules/filmotheque/filmotheque.css">
-  <link rel="stylesheet" href="modules/loader/loader.css">
-  <link rel="stylesheet" href="modules/error/error.css">
-  <link rel="stylesheet" href="modules/flash/flash.css">
-  <link rel="stylesheet" href="modules/common/spinner/spinner.css">
-  <link rel="stylesheet" href="modules/common/infinite-list/infinite-list.css">
-  <link rel="stylesheet" href="modules/common/search/search.css">
-  <link rel="stylesheet" href="modules/navigation/navigation.css">
-  <link rel="stylesheet" href="modules/movie-list/movie-list.css">
-  <link rel="stylesheet" href="modules/users/users.css">
-  <link rel="stylesheet" href="modules/users/components/user-tools-bar.css">
-  <link rel="stylesheet" href="modules/users/components/user-list.css">
-  <link rel="stylesheet" href="modules/users/components/user-detail.css">
-</head>
+	<body>
+		<div id="loader">
+			<div class="spinner animated"><div></div></div>
+		</div>
+		<div id="filmotheque"></div>
 
-<body>
-  <div id="loader">
-    <div class="spinner animated"><div></div></div>
-  </div>
-  <div id="filmotheque"></div>
+		<script src="libs/vue/vue.min.js"></script>
+		<script src="libs/vue-router/vue-router.min.js"></script>
+		<script src="libs/vue-material/vue-material.min.js"></script>
+		<script src="libs/vuelidate/vuelidate.min.js"></script>
+		<script src="libs/vuelidate/validators.min.js"></script>
+		<script src="libs/lodash/lodash.min.js"></script>
+		<script src="libs/moment/moment.min.js"></script>
+		<script src="libs/moment/locale/fr.js"></script>
+		<script src="libs/axios/axios.min.js"></script>
+		<script src="libs/byte-size/index.js"></script>
+		<script src="libs/object-hash/object_hash.js"></script>
 
-  <script src="libs/vue/vue.min.js"></script>
-  <script src="libs/vue-router/vue-router.min.js"></script>
-  <script src="libs/vue-material/vue-material.min.js"></script>
-  <script src="libs/vuelidate/vuelidate.min.js"></script>
-  <script src="libs/vuelidate/validators.min.js"></script>
-  <script src="libs/lodash/lodash.min.js"></script>
-  <script src="libs/moment/moment.min.js"></script>
-  <script src="libs/moment/locale/fr.js"></script>
-  <script src="libs/axios/axios.min.js"></script>
-  <script src="libs/byte-size/index.js"></script>
-  <script src="libs/object-hash/object_hash.js"></script>
-
-  <script type="module" src="app.mjs"></script>
-</body>
-
+		<script type="module" src="app.mjs"></script>
+	</body>
 </html>

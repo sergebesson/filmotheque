@@ -1,6 +1,11 @@
-/* global moment,_ */
+/* global Vue, moment, _ */
 
+import { movieListButtonAllComponent } from "./components/movie-list-button-all.mjs";
+import { movieListItemComponent } from "./components/movie-list-item.mjs";
 import { movieListStore } from "../../stores/movie-list.store.mjs";
+
+Vue.component("movie-list-button-all", movieListButtonAllComponent);
+Vue.component("movie-list-item", movieListItemComponent);
 
 const movieListComponent = {
 	data: () => ({

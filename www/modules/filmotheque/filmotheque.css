@@ -73,6 +73,15 @@ body, .filmotheque {
 	border-bottom: 1px solid var(--filmotheque-text-light);
 }
 
+.filmotheque .tools-bar {
+	display: flex;
+	align-items: center;
+}
+
+.filmotheque .tools-bar .tools-bar-flex1 {
+	flex: 1;
+}
+
 .fade-enter-active, .fade-leave-active {
 	transition: opacity .5s;
 }

@@ -1,6 +1,6 @@
 /* global window */
 
-import { flashStore } from "../../stores/flash.store.mjs";
+import { infosStore } from "../../stores/infos.store.mjs";
 import { meStore } from "../../stores/me.store.mjs";
 
 const profileComponent = {
@@ -18,7 +18,7 @@ const profileComponent = {
 			xhr.send(null);
 		},
 		aPropos: function () {
-			flashStore.showFlash();
+			infosStore.showFlash();
 		},
 	},
 	template: `

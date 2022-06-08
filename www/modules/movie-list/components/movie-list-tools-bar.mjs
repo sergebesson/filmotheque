@@ -6,8 +6,9 @@ const movieListToolsBarComponent = {
 		movieListStore,
 	}),
 	template: `
-		<div class="tools-bar">
-			<search :store-list="movieListStore" />
+		<div class="movie-list-tools-bar tools-bar">
+			<search class="tools-bar-flex1" :store-list="movieListStore" />
+			<movie-list-button-all />
 		</div>
 	`,
 };

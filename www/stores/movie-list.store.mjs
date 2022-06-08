@@ -2,6 +2,7 @@
 
 import { eventBus, eventName } from "../eventBus.mjs";
 import { configurationStore } from "./configuration.store.mjs";
+import { infosStore } from "./infos.store.mjs";
 
 // eslint-disable-next-line no-unused-vars
 const movieListStore = {
@@ -77,6 +78,29 @@ const movieListStore = {
 			this.state.totalPages = data.total_pages;
 			this.state.movies =
 					this.state.page === 1 ? data.movies : this.state.movies.concat(data.movies);
+			this.state.loading = false;
+		} catch (error) {
+			this.state.loading = false;
+			eventBus.$emit(eventName.ERROR, "Impossible de récupérer la liste des films", error);
+		}
+	},
+
+	async getAllMovies() {
+		try {
+			this.state.loading = true;
+			this.state.movies = [];
+			this.state.search = "";
+			const params = {
+				page_size: infosStore.state.infos.number_of_movies,
+				page: 1,
+				sort: "date-added",
+			};
+			const { data } = await axios({
+				method: this.configuration.apiMethod, url: this.configuration.apiUrl, params,
+			});
+			this.state.page = data.page;
+			this.state.totalPages = data.total_pages;
+			this.state.movies = data.movies;
 		} catch (error) {
 			eventBus.$emit(eventName.ERROR, "Impossible de récupérer la liste des films", error);
 		} finally {
