@@ -56,6 +56,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.8
+
+* Ajout du signal SIGPIPE pour relancer le serveur
+
 ### 1.4.7
 
 * Ajout d'un bouton pour charger tous les films d'un coup
