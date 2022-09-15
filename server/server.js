@@ -34,6 +34,8 @@ class Server {
 		this.configuration = null;
 		this.app = express();
 		this.server = null;
+		this.handleExitSignalBind = () => this.handleExitSignal();
+		this.handleReloadSignalBind = () => this.handleReloadSignal();
 	}
 
 	async initialize(configurationFile) {
@@ -140,19 +142,9 @@ class Server {
 					this.configuration.port
 				}/`);
 
-				process.on("SIGINT", () => {
-					console.log(); console.log("Server stopping ...");
-					this.stop()
-						.then(() => {
-							/* eslint-disable-next-line no-console */
-							console.log("Server stopped");
-							process.exitCode = 0;
-						})
-						.catch((error) => {
-							console.log(`impossible server stop : ${error.message}`);
-							process.exitCode = 1;
-						});
-				});
+				process.on("SIGINT", this.handleExitSignalBind);
+				process.on("SIGTERM", this.handleExitSignalBind);
+				process.on("SIGPIPE", this.handleReloadSignalBind);
 
 				resolve();
 			});
@@ -177,10 +169,38 @@ class Server {
 			this.server.on("close", () => {
 				this.logger.log("info", "Server is closed");
 				this.server = null;
+				process.removeListener("SIGINT", this.handleExitSignalBind);
+				process.removeListener("SIGTERM", this.handleExitSignalBind);
+				process.removeListener("SIGPIPE", this.handleReloadSignalBind);
 				resolve();
 			});
 			this.server.close();
 		});
+	}
+
+	handleExitSignal() {
+		console.log(); console.log("Server stopping ...");
+		this.stop()
+			.then(() => {
+				console.log("Server stopped");
+				process.exitCode = 0;
+			})
+			.catch((error) => {
+				console.log(`impossible server stop : ${error.message}`);
+				process.exitCode = 1;
+			});
+	}
+
+	async handleReloadSignal() {
+		try {
+			console.log(); console.log("Server stopping ...");
+			await this.stop();
+			console.log("Server stopped");
+			await this.start();
+		} catch (error) {
+			console.log(`impossible server stop or start : ${error.message}`);
+			process.exitCode = 1;
+		}
 	}
 }
 
