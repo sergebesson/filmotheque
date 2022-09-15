@@ -1,61 +1,61 @@
 {
-  "name": "@sbesson/filmotheque",
-  "version": "1.4.7",
-  "description": "Présentation de mes films",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "URL_SERVER=localhost node index.js",
-    "start:ip": "URL_SERVER=192.168.1.54 HOST=192.168.1.54 node index.js",
-    "lint": "eslint '*.js' '**/*.js'",
-    "lint:fix": "npm run lint -- --fix"
-  },
-  "bin": {
-    "migration_users": "scripts/migration_users.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sergebesson/filmotheque.git"
-  },
-  "author": "Serge BESSON <serge@famille-besson.com>",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/sergebesson/filmotheque/issues"
-  },
-  "homepage": "https://github.com/sergebesson/filmotheque#readme",
-  "dependencies": {
-    "@sbesson/configuration-loader": "^1.0.1",
-    "@sbesson/json-db": "^1.0.3",
-    "animate.css": "^4.1.0",
-    "byte-size": "^8.1.0",
-    "compression": "^1.7.4",
-    "decamelize-keys": "^1.1.0",
-    "express": "^4.16.4",
-    "express-basic-auth": "^1.2.0",
-    "express-openapi-validator": "^4.13.5",
-    "fast-glob": "^3.2.4",
-    "lodash": "^4.17.19",
-    "markdown-it": "^12.3.2",
-    "moment": "^2.27.0",
-    "object-hash": "^2.0.3",
-    "require-glob": "^4.0.0",
-    "require-yml": "^2.0.0",
-    "serve-favicon": "^2.5.0",
-    "swagger-parser": "^10.0.3",
-    "swagger-ui-express": "^4.1.4",
-    "traverse": "^0.6.6",
-    "vue": "^2.6.10",
-    "vue-material": "^1.0.0-beta-11",
-    "vue-router": "^3.3.4",
-    "vuelidate": "^0.7.5",
-    "winston": "^3.3.3",
-    "yargs": "^17.3.1"
-  },
-  "devDependencies": {
-    "eslint": "^8.7.0",
-    "eslint-plugin-node": "^11.1.0"
-  },
-  "engines": {
-    "node": ">=16.13.0"
-  }
+	"name": "@sbesson/filmotheque",
+	"version": "1.4.7",
+	"description": "Présentation de mes films",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "URL_SERVER=localhost node index.js",
+		"start:ip": "URL_SERVER=192.168.1.54 HOST=192.168.1.54 node index.js",
+		"lint": "eslint '*.js' '**/*.js'",
+		"lint:fix": "npm run lint -- --fix"
+	},
+	"bin": {
+		"migration_users": "scripts/migration_users.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/sergebesson/filmotheque.git"
+	},
+	"author": "Serge BESSON <serge@famille-besson.com>",
+	"license": "GPL-3.0",
+	"bugs": {
+		"url": "https://github.com/sergebesson/filmotheque/issues"
+	},
+	"homepage": "https://github.com/sergebesson/filmotheque#readme",
+	"dependencies": {
+		"@sbesson/configuration-loader": "^1.0.1",
+		"@sbesson/json-db": "^1.0.3",
+		"animate.css": "^4.1.0",
+		"byte-size": "^8.1.0",
+		"compression": "^1.7.4",
+		"decamelize-keys": "^1.1.0",
+		"express": "^4.16.4",
+		"express-basic-auth": "^1.2.0",
+		"express-openapi-validator": "^4.13.5",
+		"fast-glob": "^3.2.4",
+		"lodash": "^4.17.19",
+		"markdown-it": "^12.3.2",
+		"moment": "^2.27.0",
+		"object-hash": "^2.0.3",
+		"require-glob": "^4.0.0",
+		"require-yml": "^2.0.0",
+		"serve-favicon": "^2.5.0",
+		"swagger-parser": "^10.0.3",
+		"swagger-ui-express": "^4.1.4",
+		"traverse": "^0.6.6",
+		"vue": "^2.6.10",
+		"vue-material": "^1.0.0-beta-11",
+		"vue-router": "^3.3.4",
+		"vuelidate": "^0.7.5",
+		"winston": "^3.3.3",
+		"yargs": "^17.3.1"
+	},
+	"devDependencies": {
+		"eslint": "^8.7.0",
+		"eslint-plugin-node": "^11.1.0"
+	},
+	"engines": {
+		"node": ">=16.13.0"
+	}
 }
