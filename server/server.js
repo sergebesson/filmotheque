@@ -157,16 +157,20 @@ class Server {
 	}
 
 	stop() {
+		console.log(); console.log("Server stopping ...");
 		if (!this.server) {
 			return Promise.reject(new Error("Server not running"));
 		}
 
 		return new Promise((resolve, reject) => {
 			this.server.on("error", (error) => {
-				this.logger.log("error", `Server not closed ${error.message}`);
+				const messageError = `Server not closed : ${error.message}`;
+				console.log(messageError);
+				this.logger.log("error", messageError);
 				reject(error);
 			});
 			this.server.on("close", () => {
+				console.log("Server stopped");
 				this.logger.log("info", "Server is closed");
 				this.server = null;
 				process.removeListener("SIGINT", this.handleExitSignalBind);
@@ -178,28 +182,29 @@ class Server {
 		});
 	}
 
-	handleExitSignal() {
-		console.log(); console.log("Server stopping ...");
-		this.stop()
-			.then(() => {
-				console.log("Server stopped");
-				process.exitCode = 0;
-			})
-			.catch((error) => {
-				console.log(`impossible server stop : ${error.message}`);
-				process.exitCode = 1;
-			});
+	async handleExitSignal() {
+		console.log(); console.log("Exit Signal receive");
+		try {
+			await this.stop();
+			process.exitCode = 0;
+		} catch (error) {
+			console.log(`impossible server stop : ${error.message}`);
+			process.exitCode = 1;
+			// eslint-disable-next-line no-process-exit
+			setTimeout(() => process.exit(1), 1000);
+		}
 	}
 
 	async handleReloadSignal() {
 		try {
-			console.log(); console.log("Server stopping ...");
+			console.log(); console.log("Reload Signal receive");
 			await this.stop();
-			console.log("Server stopped");
 			await this.start();
 		} catch (error) {
 			console.log(`impossible server stop or start : ${error.message}`);
 			process.exitCode = 1;
+			// eslint-disable-next-line no-process-exit
+			setTimeout(() => process.exit(1), 1000);
 		}
 	}
 }
