@@ -56,6 +56,11 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.10
+
+* Modification du signal SIGPIPE par SIGUSR1
+* Protection des méthodes `start` et `stop`
+
 ### 1.4.9
 
 * Modification de la gestion des handle signal et ajout de log
