@@ -34,6 +34,8 @@ class Server {
 		this.configuration = null;
 		this.app = express();
 		this.server = null;
+		this.isStarting = false;
+		this.isStopping = false;
 		this.handleExitSignalBind = () => this.handleExitSignal();
 		this.handleReloadSignalBind = () => this.handleReloadSignal();
 	}
@@ -108,7 +110,15 @@ class Server {
 	}
 
 	start() {
-		console.log(); console.log("Server starting ...");
+		if (this.isStarting || this.isStopping) {
+			console.log();
+			console.log(this.isStarting ? "Server already starting" : "Server is shutting down");
+			return;
+		}
+
+		this.isStarting = true;
+		console.log();
+		console.log("Server starting ...");
 		this.server = this.configuration.ssl.enable ?
 			https.createServer({
 				/* eslint-disable-next-line no-sync */
@@ -144,7 +154,7 @@ class Server {
 
 				process.on("SIGINT", this.handleExitSignalBind);
 				process.on("SIGTERM", this.handleExitSignalBind);
-				process.on("SIGPIPE", this.handleReloadSignalBind);
+				process.on("SIGUSR1", this.handleReloadSignalBind);
 
 				resolve();
 			});
@@ -152,16 +162,24 @@ class Server {
 				port: this.configuration.port,
 				host: this.configuration.host,
 			});
+		}).finally(() => {
+			this.isStarting = false;
 		});
 
 	}
 
 	stop() {
+		if (this.isStarting || this.isStopping) {
+			console.log();
+			console.log(this.isStopping ? "Server already stopping" : "Server is starting");
+			return;
+		}
 		console.log(); console.log("Server stopping ...");
 		if (!this.server) {
 			return Promise.reject(new Error("Server not running"));
 		}
 
+		this.isStopping = true;
 		return new Promise((resolve, reject) => {
 			this.server.on("error", (error) => {
 				const messageError = `Server not closed : ${error.message}`;
@@ -175,10 +193,12 @@ class Server {
 				this.server = null;
 				process.removeListener("SIGINT", this.handleExitSignalBind);
 				process.removeListener("SIGTERM", this.handleExitSignalBind);
-				process.removeListener("SIGPIPE", this.handleReloadSignalBind);
+				process.removeListener("SIGUSR1", this.handleReloadSignalBind);
 				resolve();
 			});
 			this.server.close();
+		}).finally(() => {
+			this.isStopping = false;
 		});
 	}
 
