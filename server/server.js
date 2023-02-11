@@ -179,12 +179,20 @@ class Server {
 			return Promise.reject(new Error("Server not running"));
 		}
 
+		const timeoutCloseAllConnection = setTimeout(() => {
+			if (this.server) {
+				this.logger.log("info", "forcing close all connections");
+				this.server.closeAllConnections();
+			}
+		}, this.configuration.closeTimeoutInMin * 60 * 1000);
+
 		this.isStopping = true;
 		return new Promise((resolve, reject) => {
 			this.server.on("error", (error) => {
 				const messageError = `Server not closed : ${error.message}`;
 				console.log(messageError);
 				this.logger.log("error", messageError);
+				clearTimeout(timeoutCloseAllConnection);
 				reject(error);
 			});
 			this.server.on("close", () => {
@@ -194,6 +202,7 @@ class Server {
 				process.removeListener("SIGINT", this.handleExitSignalBind);
 				process.removeListener("SIGTERM", this.handleExitSignalBind);
 				process.removeListener("SIGUSR1", this.handleReloadSignalBind);
+				clearTimeout(timeoutCloseAllConnection);
 				resolve();
 			});
 			this.server.close();
