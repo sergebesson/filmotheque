@@ -180,10 +180,8 @@ class Server {
 		}
 
 		const timeoutCloseAllConnection = setTimeout(() => {
-			if (this.server) {
-				this.logger.log("info", "forcing close all connections");
-				this.server.closeAllConnections();
-			}
+			this.logger.log("info", "forcing close all connections");
+			this.server?.closeAllConnections();
 		}, this.configuration.closeTimeoutInMin * 60 * 1000);
 
 		this.isStopping = true;
