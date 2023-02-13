@@ -192,7 +192,6 @@ class Server {
 				const messageError = `Server not closed : ${error.message}`;
 				console.log(messageError);
 				this.logger.log("error", messageError);
-				clearTimeout(timeoutCloseAllConnection);
 				reject(error);
 			});
 			this.server.on("close", () => {
@@ -202,11 +201,12 @@ class Server {
 				process.removeListener("SIGINT", this.handleExitSignalBind);
 				process.removeListener("SIGTERM", this.handleExitSignalBind);
 				process.removeListener("SIGUSR1", this.handleReloadSignalBind);
-				clearTimeout(timeoutCloseAllConnection);
 				resolve();
 			});
+			this.server.closeIdleConnections();
 			this.server.close();
 		}).finally(() => {
+			clearTimeout(timeoutCloseAllConnection);
 			this.isStopping = false;
 		});
 	}
