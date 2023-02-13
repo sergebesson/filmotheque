@@ -56,6 +56,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.13
+
+* Ajout css d'un `overflow: hidden` sur body
+
 ### 1.4.12
 
 * Ajout de `closeIdleConnections` à l'arrêt du server
