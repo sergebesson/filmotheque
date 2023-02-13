@@ -56,6 +56,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.12
+
+* Ajout de `closeIdleConnections` à l'arrêt du server
+
 ### 1.4.11
 
 * Ajout d'un timeout qui close toutes les connexions lors de l'arrêt du serveur
