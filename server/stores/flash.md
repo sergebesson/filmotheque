@@ -56,6 +56,10 @@ Pour ceux que ça intéresse les sources sont sur [github](https://github.com/se
 
 ## Changelog <a id="Changelog"></a>
 
+### 1.4.14
+
+* Passage à node 18.14 LTS et mise à jour des librairies
+
 ### 1.4.13
 
 * Ajout css d'un `overflow: hidden` sur body
