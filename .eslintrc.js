@@ -4,7 +4,10 @@ module.exports = {
 	env: {
 		node: true,
 		mocha: true,
-		es6: true,
+		es2022: true,
+	},
+	parserOptions: {
+		ecmaVersion: "latest",
 	},
 	plugins: [ "node" ],
 	extends: [ "eslint:recommended", "plugin:node/recommended" ],
