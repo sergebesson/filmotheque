@@ -2,6 +2,9 @@
 
 Présentation de mes films
 
+Le [suivi de la modernisation technique du client](docs/modernisation/EPIC.md)
+regroupe la revue initiale, les tickets, leurs dépendances et leur avancement.
+
 <!-- TOC -->
 
 - [Documentation sur le développement](#documentation-sur-le-développement)
@@ -15,10 +18,12 @@ Présentation de mes films
       - [api.js](#apijs)
       - [module API](#module-api)
     - [le context](#le-context)
-  - [www le front](#www-le-front)
+  - [www le client Vue 3 compilé](#www-le-client-vue-3-compilé)
     - [L'arborescence des sources](#larborescence-des-sources-1)
     - [Structure de la page](#structure-de-la-page)
     - [Les stores](#les-stores-1)
+    - [Installation et démarrage](#installation-et-démarrage)
+    - [Vérifications](#vérifications)
 
 <!-- /TOC -->
 
@@ -30,6 +35,7 @@ Présentation de mes films
 * **scripts** : contient les scripts par exemple de migration.
 * **server** : contient le code source du serveur (backend)
 * **www** : contient le code source de l'interface utilisateur (frontend)
+* **www.vue2** : sauvegarde de l'ancien client Vue 2, non utilisée par le serveur
 
 l'`index.js` ne fait que lancer le serveur.
 
@@ -126,18 +132,27 @@ Le context contient :
 * **logger** : logger (`winston`)
 * **\<store>** : Accès à l'instance des stores.
 
-### www le front
+### www le client Vue 3 compilé
+
+Le serveur sert `www/dist`. L'ancien client est conservé sans modification dans
+`www.vue2`, uniquement à titre de sauvegarde. Ses dépendances Vue 2 et les anciennes
+routes `/libs` ne sont plus installées ni utilisées.
+
+Le client utilise Vue 3, Vue Router 4, Vuetify et Vuelidate 2, avec des composants
+`.vue` compilés par Vite. Les templates ne sont plus compilés dans le navigateur.
+L'Options API (`data`, `computed`, `watch`, `methods`) et les fichiers CSS voisins
+des composants sont conservés.
 
 #### L'arborescence des sources
 
 * **common** : module vuejs commun à tous
 * **modules** : module vuejs
 * **stores** : les stores
-* **app.mjs** : le module de lancement de l'application et lancement vuejs
-* **error.html** : page d'erreur principal
-* **eventBus.mjs** : Bus d'événement global à toute l'application
-* **filmotheque.ico** : Icône de l'application
+* **app.js** : le module de lancement de l'application et lancement vuejs
+* **eventBus.js** : Bus d'événement global à toute l'application, utilisant mitt
+* **public** : page d'erreur et icône de l'application, copiées à la racine de `dist`
 * **index.html** : Page principal de l'application
+* **dist** : client compilé servi par Express, non versionné
 
 #### Structure de la page
 
@@ -165,5 +180,150 @@ Chaque route doit définir une tools bar de la rubrique et bien-sur l'affichage 
 
 #### Les stores
 
-Se sont des simples object (singleton) de données récupérer via l'api rest du back.
-Ils sont généralement référencés dans le `data` d'un module vuejs, ce qui permet de mettre à jour l'affichage dès qu'une donnée change. Principe expliqué [ici](https://fr.vuejs.org/v2/guide/state-management.html#Gestion-d%E2%80%99etat-simple-a-partir-de-rien).
+Les stores restent des objets singletons de données récupérées via l'API REST,
+avec un `state` rendu réactif par `reactive()`. Ils sont référencés dans le `data`
+des composants pour mettre à jour l'affichage dès qu'une donnée change.
+
+#### Installation et démarrage
+
+Le développement (installation, lint, compilation et tests) utilise **Node 24** ;
+`.nvmrc` permet de sélectionner cette branche avec `nvm use` après `nvm install`.
+La contrainte d'exécution de l'application reste **20.x à partir de 20.19, ou ≥22.12**
+dans les manifestes : le choix de Node 24 pour l'outillage ne la réduit pas.
+Le client dispose de ses propres dépendances et de son propre `package-lock.json`,
+dans `www`, séparément des dépendances du serveur à la racine.
+
+```sh
+npm ci
+npm run client:install
+npm start
+```
+
+`npm start` compile le client avant de démarrer Express sur `http://localhost:8080`,
+avec l'authentification existante. Pour utiliser une configuration spécifique,
+exécuter `npm run build` puis `URL_SERVER=localhost node index.js chemin/configuration.json`.
+
+Dans un deuxième terminal, `npm run build:watch` reconstruit le client à chaque
+modification. Recharger le navigateur pour voir le résultat ; aucun autre serveur
+web n'est nécessaire. Les URL avec hash (`#/movies`, `#/users/list`, etc.) sont conservées.
+
+#### Vérifications
+
+```sh
+npm run lint
+npx --prefix www playwright install chromium
+npm test
+```
+
+Le lint utilise ESLint 10 et deux configurations flat indépendantes :
+`eslint.config.js` (serveur/scripts CommonJS) et `www/eslint.config.js` (JS/CJS/Vue).
+Les commandes et exclusions historiques sont conservées, y compris les deux
+configurations elles-mêmes ; `data`, `www.vue2`, les fichiers cachés ordinaires et
+les sorties générées ne sont pas ajoutés au contrôle. Les globals Node des tests
+et de Playwright restent limités aux fichiers concernés, pas aux composants Vue.
+Les presets récents sont ajustés pour conserver les anciennes règles et leurs
+sévérités, dont `vue/no-mutating-props` avec `shallowOnly: true`. Le durcissement
+accepté de `no-shadow-restricted-names` contrôle aussi les noms de classes/imports ;
+une classe nommée `Infinity` est désormais refusée. Il ne s'agit pas d'un typage.
+
+Pour VS Code, utiliser une extension ESLint compatible avec ESLint 10.
+Réglages locaux utilisés dans ce checkout (`.vscode` est ignoré par Git) :
+
+```json copy Copy ESLint Settings
+{
+  "eslint.runtime": "node",
+  "eslint.workingDirectories": [".", "./www"],
+  "eslint.validate": ["javascript", "vue"]
+}
+```
+
+Le binaire `node` vient du `PATH`. Ouvrir l'éditeur depuis un environnement Node 24
+(après `nvm use`), puis redémarrer son serveur ESLint si l'éditeur était déjà lancé
+avec un autre Node. Aucune CI ni correction automatique à l'enregistrement n'est activée.
+
+Le contrôle de types **ciblé sur la recherche** se lance séparément sous Node 24 :
+
+```sh copy Copy Search Typecheck
+npm run typecheck:search
+```
+
+Il utilise les versions verrouillées de TypeScript, `vue-tsc` et `@types/lodash`
+installées par `npm run client:install`. Il n'est appelé ni par `npm test`, ni par
+le build ou le lint, et n'active aucune CI. Il n'émet aucun fichier JavaScript.
+
+`www/tsconfig.search.json` énumère trois entrées : le store de films,
+`search.vue` (script et expressions du template), et
+`tests/search-contract.check.js`. Ce dernier vérifie que le vrai store satisfait
+le contrat de recherche et que son action renvoie `Promise<void>` ; ce n'est
+pas un scénario Playwright ni un module chargé par l'application. Les annotations
+restent en JavaScript/JSDoc, sans conversion TypeScript ou Composition API.
+
+Les imports HTTP, bus d'événements, configuration et infos sont chargés pour
+leurs types/signatures, **sans contrôle de leurs corps**. L'inventaire observé
+est de sept sources et 88 déclarations, pas de 95 fichiers applicatifs vérifiés.
+Pour voir le graphe effectivement chargé après une évolution :
+
+```sh copy Copy Search Typecheck Graph
+npm --prefix www run typecheck:search -- --listFilesOnly
+```
+
+Le périmètre est activé par `@ts-check` avec `checkJs: false` ; `strict: true`
+et `noImplicitAny: true` sont activés, et `skipLibCheck: true` ne revalide pas les
+déclarations des dépendances. Des types `any` restent possibles, notamment sur
+les paramètres de watchers et les réponses JSON. Le contexte `this` local déclaré
+en JSDoc doit rester cohérent avec le composant ; il ne vérifie pas son cycle de vie.
+Les paramètres HTTP de la recherche déclarent `search` facultatif ; seule la forme
+`{number_of_movies?: number}` des informations utilisées par le store films est
+précisée, pour conserver leur état initial vide. Ce n'est pas une validation du JSON.
+Les clés textuelles des watchers, les props des composants globaux (dont Spinner),
+le câblage de la toolbar, Vuetify et les autres consommateurs ne sont pas couverts.
+Ce garde-fou ne valide ni les réponses réseau, ni le succès HTTP, ni la concurrence.
+Les tests de comportement restent nécessaires.
+
+Cette configuration dédiée est choisie par la commande avec `--project` ; elle
+n'est pas automatiquement sélectionnée par VS Code comme un `jsconfig.json` ou
+`tsconfig.json`. L'alignement du projet actif de l'éditeur n'est pas configuré ici.
+
+`npm test` compile le client puis lance les tests ; `npm run test:client` seul
+réutilise la dernière compilation.
+
+Les tests Playwright démarrent le vrai serveur Express sur le port **4173**, avec
+des bases et des fichiers de films temporaires supprimés à l'arrêt. Ils couvrent
+les parcours films et utilisateurs sans utiliser les données de `data`. Le port
+4173 doit être libre ; un serveur déjà lancé n'est pas réutilisé. Ne pas lancer
+ces tests contre l'application normale de `npm start` sur 8080. Les deux serveurs
+servent toutefois le même `www/dist`, reconstruit par `npm test`.
+
+Pour utiliser le Chromium déjà installé sur ce runner plutôt que le télécharger :
+
+```sh
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm test
+```
+
+Les projets `desktop` (1280 × 800) et `mobile` (390 × 844, `isMobile` et tactile)
+utilisent tous les deux **Chromium**. Ce n'est ni Safari/iOS, ni Firefox, ni un
+appareil physique. Les parcours navigateur, y compris le lecteur non administrateur,
+utilisent la page du projet ; le lecteur surcharge seulement l'authentification.
+Les tests HTTP, stores et configuration s'exécutent dans Node avec `fetch` simulé :
+leur répétition sous les deux projets ne vérifie pas un rendu mobile.
+
+Dans `client.spec.js`, une fixture automatique surveille les exceptions JavaScript
+non interceptées de toutes les pages du contexte, avant navigation et jusqu'à la
+fin du scénario. Aucun message n'est exempté, même dans les scénarios d'erreurs API
+volontaires : ceux-ci vérifient leurs dialogues et leur récupération, sans autoriser
+de rejet non géré. Les diagnostics `console.error` ne sont pas assimilés à des
+exceptions ; une réponse HTTP refusée peut en produire sans erreur JavaScript.
+Le contrôle d'absence du dialogue ERREUR en fin de scénario reste en place.
+
+Cette surveillance ne voit pas une erreur consommée par le gestionnaire Vue : elle
+passe alors par le dialogue commun, qui ignore les erreurs suivantes tant qu'il est
+ouvert. Elle ne promet pas de détecter toutes les erreurs internes. Le flash automatique
+est neutralisé dans les parcours par `last_version = '999.0.0'` ; son ouverture manuelle
+est testée, pas sa politique de versions. La priorité de requêtes réordonnées n'est
+pas garantie par cette suite. Hors du contrat de recherche contrôlé séparément par
+`typecheck:search`, les commentaires de contrats ne sont pas vérifiés par un outil
+de typage.
+
+La compilation et les résultats des tests ne sont pas versionnés. Après une
+modification des dépendances du client, utiliser `npm --prefix www install` pour
+mettre à jour son verrou, puis reconstruire le client.

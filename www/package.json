@@ -1,0 +1,42 @@
+{
+	"name": "@sbesson/filmotheque-client",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "vite build",
+		"build:watch": "vite build --watch",
+		"preview": "vite preview --host 127.0.0.1",
+		"lint": "eslint . --ext .js,.cjs,.vue",
+		"typecheck:search": "vue-tsc --project tsconfig.search.json",
+		"test": "playwright test"
+	},
+	"dependencies": {
+		"@vuelidate/core": "^2.0.3",
+		"@vuelidate/validators": "^2.0.4",
+		"animate.css": "^4.1.1",
+		"byte-size": "^8.2.1",
+		"lodash": "^4.18.1",
+		"mitt": "^3.0.1",
+		"object-hash": "^3.0.0",
+		"vue": "^3.5.45",
+		"vue-router": "^4.6.5",
+		"vuetify": "^4.3.3"
+	},
+	"devDependencies": {
+		"@eslint/js": "10.0.1",
+		"@playwright/test": "^1.58.2",
+		"@types/lodash": "4.17.27",
+		"@vitejs/plugin-vue": "^6.0.11",
+		"eslint": "10.15.0",
+		"eslint-plugin-vue": "10.12.1",
+		"globals": "13.24.0",
+		"typescript": "5.9.3",
+		"vite": "^8.3.8",
+		"vue-eslint-parser": "10.4.2",
+		"vue-tsc": "3.3.14"
+	},
+	"engines": {
+		"node": "^20.19.0 || >=22.12.0"
+	}
+}

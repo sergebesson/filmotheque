@@ -1,17 +1,43 @@
 "use strict";
 
-module.exports = {
-	env: {
-		node: true,
-		mocha: true,
-		es2022: true,
-	},
-	parserOptions: {
+const eslint = require("@eslint/js");
+const node = require("eslint-plugin-n");
+const globals = require("globals");
+
+module.exports = [ {
+	ignores: [ "**/node_modules/**", "**/.*" ],
+}, {
+	files: [ "*.js", "server/**/*.js", "scripts/**/*.js" ],
+	languageOptions: {
 		ecmaVersion: "latest",
+		sourceType: "script",
+		parserOptions: { ecmaFeatures: { globalReturn: true } },
+		globals: { ...globals.node, ...globals.mocha, ...globals.es2021, GLOBAL: "readonly", root: "readonly" },
 	},
-	plugins: [ "node" ],
-	extends: [ "eslint:recommended", "plugin:node/recommended" ],
+	linterOptions: { reportUnusedDisableDirectives: "off" },
+	plugins: node.configs["flat/recommended-script"].plugins,
 	rules: {
+		...eslint.configs.recommended.rules,
+		...node.configs["flat/recommended-script"].rules,
+		// Conserver le recommandé ESLint 8, sans adopter les nouvelles règles de 10.
+		"no-constant-binary-expression": "off",
+		"no-empty-static-block": "off",
+		"no-new-native-nonconstructor": "off",
+		"no-unassigned-vars": "off",
+		"no-unused-private-class-members": "off",
+		"no-useless-assignment": "off",
+		"preserve-caught-error": "off",
+		"no-extra-semi": "error",
+		"no-inner-declarations": [ "error", "functions", { blockScopedFunctions: "disallow" } ],
+		"no-mixed-spaces-and-tabs": "error",
+		"no-new-symbol": "error",
+		"no-unused-vars": [ "error", { caughtErrors: "none" } ],
+		"no-constant-condition": [ "error", { checkLoops: "all" } ],
+		// Garder les règles Node historiques, sans doubler no-process-exit/shebang.
+		"n/no-process-exit": "off",
+		"n/hashbang": "off",
+		"n/no-unpublished-bin": "error",
+		"n/shebang": "error",
 		/**
 		 * Possible Errors (la plupart sont activées par défaut et ne sont pas répétées ici si elles ne sont pas surchargées)
 		 */
@@ -20,7 +46,6 @@ module.exports = {
 		"no-prototype-builtins": "off",
 		"no-template-curly-in-string": "warn",
 		"no-unsafe-negation": "warn",
-		"valid-jsdoc": "off",
 		/**
 		 * Best Practices (quelques unes sont activées par défaut et ne sont pas répétées ici si elles ne sont pas surchargées)
 		 */
@@ -49,7 +74,7 @@ module.exports = {
 		"no-fallthrough": "warn",
 		"no-floating-decimal": "warn",
 		"no-global-assign": "error",
-		"no-implicit-coercion": "warn",
+		"no-implicit-coercion": [ "warn", { allow: [ "- -", "-" ] } ],
 		"no-implicit-globals": "error",
 		"no-implied-eval": "error",
 		"no-invalid-this": "warn",
@@ -101,7 +126,8 @@ module.exports = {
 		"no-label-var": "warn",
 		"no-restricted-globals": "off",
 		"no-shadow": "error",
-		"no-shadow-restricted-names": "error",
+		// Le contrôle étendu des noms de classes/imports est accepté (MOD-10).
+		"no-shadow-restricted-names": [ "error", { reportGlobalThis: false } ],
 		"no-undef-init": "off",
 		"no-undefined": "off",
 		"no-use-before-define": "off",
@@ -190,7 +216,6 @@ module.exports = {
 		"padded-blocks": "off",
 		"quote-props": [ "warn", "as-needed" ],
 		quotes: [ "warn", "double" ],
-		"require-jsdoc": "off",
 		"semi-spacing": [ "warn", { before: false, after: true } ],
 		semi: [ "warn", "always" ],
 		"sort-keys": "off",
@@ -213,7 +238,7 @@ module.exports = {
 		"no-confusing-arrow": "off",
 		"no-duplicate-imports": "warn",
 		"no-restricted-imports": "off",
-		"no-useless-computed-key": "warn",
+		"no-useless-computed-key": [ "warn", { enforceForClassMembers: false } ],
 		"no-useless-constructor": "warn",
 		"no-useless-rename": "warn",
 		"no-var": "off",
@@ -232,6 +257,12 @@ module.exports = {
 		/**
 		 * Plugin Node
 		 */
-		"node/no-deprecated-api": "warn",
+		"n/no-deprecated-api": "warn",
 	},
-};
+}, {
+	files: [ "eslint.config.js" ],
+	rules: {
+		// Cette configuration de développement charge uniquement ces devDependencies.
+		"n/no-unpublished-require": [ "error", { allowModules: [ "@eslint/js", "eslint-plugin-n", "globals" ] } ],
+	},
+} ];
