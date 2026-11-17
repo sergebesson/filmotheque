@@ -49,10 +49,11 @@ class Server {
 		this.app.use(compression());
 		this.app.use((request, response, next) =>
 			this.checkUrlServerMiddleware(request, response, next));
-		this.app.use(favicon(path.join(__dirname, "../www", "filmotheque.ico")));
+		const clientDirectory = path.join(__dirname, "../www/dist");
+		this.app.use(favicon(path.join(clientDirectory, "filmotheque.ico")));
 		this.app.use(publicRouterFactory(context));
 		this.app.use(await authentificationRouterFactory(context));
-		this.app.use(staticRouterFactory(context));
+		this.app.use(staticRouterFactory(context, clientDirectory));
 		this.app.use("/api", await apiRouterFactory(context));
 
 		// Route d'erreur

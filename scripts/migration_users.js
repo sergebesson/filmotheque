@@ -3,7 +3,7 @@
 
 /* eslint-disable no-console */
 
-// eslint-disable-next-line node/no-unsupported-features/node-builtins
+// eslint-disable-next-line n/no-unsupported-features/node-builtins
 const fs = require("fs").promises;
 const yargs = require("yargs");
 
