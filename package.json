@@ -40,7 +40,7 @@
 		"express-openapi-validator": "^4.13.8",
 		"fast-glob": "^3.2.12",
 		"lodash": "^4.17.19",
-		"markdown-it": "^13.0.1",
+		"markdown-it": "^14.3.3",
 		"require-glob": "^4.1.0",
 		"require-yml": "^2.0.0",
 		"serve-favicon": "^2.5.0",
