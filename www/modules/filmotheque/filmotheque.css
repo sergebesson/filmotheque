@@ -1,96 +1,29 @@
+/* Palette globale, disponible avant le montage (loader) et dans les overlays téléportés.
+ * app.js utilise aussi ces couleurs pour construire le thème Vuetify. */
 :root {
-	--filmotheque-over-background: #8b451333;
+	--filmotheque-primary: #8b4513;
+	--filmotheque-error: #ff5252;
+	--filmotheque-over-background: rgba(var(--v-theme-primary), .2);
 	--filmotheque-text-light: #dddddd;
-	--md-theme-default-primary-on-background: #dddddd;
-	--md-theme-default-text-primary-on-background: saddlebrown;
-	--md-theme-default-primary: saddlebrown;
+	--filmotheque-text-muted: #0009;
 }
 
-* {
-	scrollbar-width: thin;
-}
-
-*[disabled] {
-	-webkit-text-fill-color: unset !important;
-	color: #ddd;
-}
-
-fieldset[disabled] * {
-	-webkit-text-fill-color: unset !important;
-	color: #ddd;
-}
-
-body,
-.filmotheque {
-	overflow: hidden;
-	height: 100%;
-}
-
-.md-dialog .md-button.md-primary {
-	color: var(--md-theme-default-text-primary-on-background);
-	font-weight: initial;
-}
-
-.filmotheque .md-toolbar.md-theme-default.md-transparent .md-icon {
-	color: inherit;
-}
-
-.filmotheque .content {
-	padding: 20px;
-	height: 100%;
-	background-color: white;
-}
-
-.filmotheque .content>div:first-child {
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	min-width: 210px;
-}
-
-.filmotheque .header {
-	padding: 0px 16px;
-	flex-wrap: nowrap;
-}
-
-.filmotheque .header>.md-layout-item:nth-child(1) {
-	max-width: 40px;
-	min-width: 40px;
-	margin: 16px 10px 16px 0px;
-}
-
-.filmotheque .header>.md-layout-item:nth-last-child(1) {
-	max-width: 40px;
-	min-width: 40px;
-	margin: 16px;
-	margin-right: 0px;
-}
-
-.filmotheque .md-dialog-container {
-	border-radius: 15px;
-	transform: none;
-}
-
-.filmotheque .md-dialog-title {
-	padding: 12px 24px;
-	border-bottom: 1px solid var(--filmotheque-text-light);
-}
-
-.filmotheque .tools-bar {
-	display: flex;
-	align-items: center;
-}
-
-.filmotheque .tools-bar .tools-bar-flex1 {
-	flex: 1;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-	transition: opacity .5s;
-}
-
-.fade-enter,
-.fade-leave-to {
-	opacity: 0;
-}
+/* Cadre global et composants partagés entre les routes ; pas de styles administratifs ici. */
+* { scrollbar-width: thin; }
+html, body, #filmotheque { height: 100%; overflow: hidden; }
+.filmotheque { height: 100%; color: var(--filmotheque-primary); }
+/* Le wrap interne de VApp doit pouvoir rétrécir pour laisser défiler les listes, pas la page. */
+.filmotheque .v-application__wrap { min-height: 0; height: 100%; }
+.filmotheque .content { padding: 20px; height: 100%; background: white; }
+.filmotheque .content > div { height: 100%; display: flex; flex-direction: column; min-width: 210px; box-shadow: 0 6px 6px -3px #0003, 0 10px 14px 1px #00000024, 0 4px 18px 3px #0000001f; }
+.filmotheque .header { display: flex; align-items: center; gap: 10px; padding: 0 16px; min-height: 76px; color: var(--filmotheque-text-muted); }
+.filmotheque .header > .tools-bar { flex: 1; min-width: 0; }
+.filmotheque .header > .profile { margin-left: 6px; }
+.filmotheque .tools-bar { display: flex; align-items: center; }
+.filmotheque .tools-bar-flex1 { flex: 1; min-width: 0; }
+/* VBtn n'expose pas de props pour la casse et l'approche typographique historiques. */
+.filmotheque .v-btn { text-transform: none; letter-spacing: normal; }
+/* contentClass de VDialog : global pour la téléportation, limité aux dialogues de l'application.
+ * Le titre généré par VCard n'expose pas ces réglages de retour à la ligne, padding et séparateur. */
+.filmotheque-dialog .v-card-title { white-space: normal; padding: 12px 24px; border-bottom: 1px solid var(--filmotheque-text-light); }
+.list-subheader { padding: 0 16px; min-height: 20px; font-size: 14px; color: var(--filmotheque-text-muted); }

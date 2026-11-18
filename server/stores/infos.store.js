@@ -2,7 +2,7 @@
 
 const path = require("path");
 const { version } = require("../../package.json");
-// eslint-disable-next-line node/no-unsupported-features/node-builtins
+// eslint-disable-next-line n/no-unsupported-features/node-builtins
 const fs = require("fs").promises;
 const markdownIt = require("markdown-it")({ html: true });
 
