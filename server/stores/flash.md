@@ -18,7 +18,7 @@ Suite à un problème de disque dur, j'ai perdu le site.
 
 Le site est en cours de réécriture avec l'aide de mon fils :-)
 
-Le site est écrit en [nodejs](https://nodejs.org/fr/) pour la partie serveur et pour la partie IHM avec [vuejs](https://fr.vuejs.org/index.html) et [vue material](https://vuematerial.io/).
+Le site est écrit en [nodejs](https://nodejs.org/fr/) pour la partie serveur et pour la partie IHM avec [vuejs](https://fr.vuejs.org/index.html) et [Vuetify](https://vuetifyjs.com/).
 
 Vous trouverez une première version minimaliste qui vous permettra de télécharger le film et d'afficher la page du film sur [themoviedb](https://www.themoviedb.org/), [allocine](http://www.allocine.fr/) et [imdb](https://www.imdb.com/).  
 La liste des films est triée par ordre d'ajout des films.
@@ -55,6 +55,14 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/filmotheque)
 
 ## Changelog <a id="Changelog"></a>
+
+### 1.4.15
+
+* Migration de l'interface vers Vue 3 et Vuetify, sans ajout de fonctionnalité
+* Simplification du code, mise à jour des dépendances et renforcement des tests
+* Correction de la gestion des noms d'utilisateur contenant des caractères spéciaux
+* Correction de la récupération de la liste après une opération utilisateur réussie mais une actualisation échouée
+* Correction de la comparaison des versions du flash ; les versions patch ne déclenchent toujours pas son ouverture automatique
 
 ### 1.4.14
 
