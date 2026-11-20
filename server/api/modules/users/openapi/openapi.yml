@@ -3,6 +3,33 @@ tags:
     description: Gestion des utilisateurs
 
 paths:
+  /index/rebuild:
+    post:
+      tags: [ users, administration ]
+      summary: Reconstruit l’index des logins depuis les comptes
+      description: >-
+        Réservé à l’administrateur. Remplace atomiquement l’index sans modifier les comptes.
+        Si l’index empêche l’authentification administrateur, utiliser le script hors ligne.
+        Le succès attend la synchronisation disque ; une erreur après commit ne signifie
+        pas que la reconstruction est annulée.
+      responses:
+        200:
+          description: Index reconstruit et synchronisation disque confirmée
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [ number_indexed_users ]
+                properties:
+                  number_indexed_users:
+                    type: integer
+                    minimum: 0
+        401:
+          $ref: "responses.yml#/login_index_error"
+        500:
+          $ref: "responses.yml#/login_index_error"
+
   /me:
     summary: L'utilisateur connecté
     description: récupération de l'utilisateur connecté
@@ -13,6 +40,20 @@ paths:
       responses:
         200:
           $ref: "responses.yml#/user_infos"
+        401:
+          description: Compte authentifié supprimé avant la lecture de ses informations
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [ status, error_description ]
+                properties:
+                  status:
+                    type: integer
+                    enum: [ 401 ]
+                  error_description:
+                    type: string
 
   /{name}/avatar:
     summary: avatar de l'utilisateur

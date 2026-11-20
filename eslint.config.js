@@ -260,6 +260,11 @@ module.exports = [ {
 		"n/no-deprecated-api": "warn",
 	},
 }, {
+	files: [ "server/tests/**/*.js" ],
+	rules: {
+		"n/no-unsupported-features/node-builtins": [ "error", { version: ">=24.11.0" } ],
+	},
+}, {
 	files: [ "eslint.config.js" ],
 	rules: {
 		// Cette configuration de développement charge uniquement ces devDependencies.

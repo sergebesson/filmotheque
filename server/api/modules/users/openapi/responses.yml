@@ -25,3 +25,18 @@ user_list:
     application/json:
       schema:
         $ref: "./schemas.yml#/user_list"
+
+login_index_error:
+  description: Accès refusé, reconstruction refusée ou durabilité non confirmée
+  content:
+    application/json:
+      schema:
+        type: object
+        additionalProperties: false
+        required: [ status, error_description ]
+        properties:
+          status:
+            type: integer
+            enum: [ 401, 500 ]
+          error_description:
+            type: string

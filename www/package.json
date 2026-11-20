@@ -9,18 +9,19 @@
 		"preview": "vite preview --host 127.0.0.1",
 		"lint": "eslint . --ext .js,.cjs,.vue",
 		"typecheck:search": "vue-tsc --project tsconfig.search.json",
-		"test": "playwright test"
+		"test": "playwright test",
+		"test:empty": "playwright test --config=playwright.empty.config.js"
 	},
 	"dependencies": {
 		"@vuelidate/core": "^2.0.3",
 		"@vuelidate/validators": "^2.0.4",
 		"animate.css": "^4.1.1",
-		"byte-size": "^8.2.1",
+		"byte-size": "^9.0.2",
 		"lodash": "^4.18.1",
 		"mitt": "^3.0.1",
 		"object-hash": "^3.0.0",
 		"vue": "^3.5.45",
-		"vue-router": "^4.6.5",
+		"vue-router": "^5.5.1",
 		"vuetify": "^4.3.3"
 	},
 	"devDependencies": {
@@ -30,13 +31,13 @@
 		"@vitejs/plugin-vue": "^6.0.11",
 		"eslint": "10.15.0",
 		"eslint-plugin-vue": "10.12.1",
-		"globals": "13.24.0",
-		"typescript": "5.9.3",
+		"globals": "17.14.0",
+		"typescript": "6.0.3",
 		"vite": "^8.3.8",
 		"vue-eslint-parser": "10.4.2",
 		"vue-tsc": "3.3.14"
 	},
 	"engines": {
-		"node": "^20.19.0 || >=22.12.0"
+		"node": "^22.22.0 || >=24.11.0"
 	}
 }

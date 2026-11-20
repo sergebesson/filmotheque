@@ -101,16 +101,16 @@ test("films : pagination, recherche, chargement complet et téléchargement", as
 	await expect(page.getByText("Film de test 01", { exact: true })).toBeVisible();
 	await expect(page.locator(".movie-list-item")).toHaveCount(3);
 	await expect(page.getByText("17 mars 2026", { exact: true })).toBeVisible();
-	await expect(page.getByText("Film de test 01.avi - 1.00 Mio", { exact: true })).toBeVisible();
+	await expect(page.getByText("Film de test 01.avi - 1 Mio", { exact: true })).toBeVisible();
 	await page.screenshot({ path: testInfo.outputPath("movies.png"), animations: "disabled" });
 	const viewport = page.viewportSize();
 	await page.setViewportSize({ ...viewport, height: 240 });
 	await page.locator(".infinite-list").evaluate((list) => { list.scrollTop = list.scrollHeight; });
 	await expect(page.locator(".movie-list-item")).toHaveCount(6);
-	await page.setViewportSize(viewport);
 	await page.getByRole("textbox", { name: "Rechercher...", exact: true }).fill("Film de test 17");
 	await expect(page.locator(".movie-list-item")).toHaveCount(1);
 	await expect(page.getByText("Film de test 17", { exact: true })).toBeVisible();
+	await page.setViewportSize(viewport);
 	await page.getByRole("button", { name: "Vider Rechercher...", exact: true }).click();
 	await expect(page.getByRole("textbox", { name: "Rechercher...", exact: true })).toHaveValue("");
 	await expect(page.locator(".movie-list-item")).toHaveCount(3);

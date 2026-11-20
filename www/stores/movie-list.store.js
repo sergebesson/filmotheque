@@ -85,7 +85,7 @@ const movieListStore = {
 			this.state.movies = [];
 			this.state.search = "";
 			const params = {
-				page_size: infosStore.state.infos.number_of_movies,
+				page_size: Math.max(1, infosStore.state.infos.number_of_movies ?? 0),
 				page: 1,
 				sort: "date-added",
 			};

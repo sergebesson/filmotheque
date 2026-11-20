@@ -33,15 +33,27 @@ initialization_report:
       format: int32
     movies_in_error:
       description: Liste des films non insérés suite à une erreur
-      type: object
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        required: [ error, document ]
+        properties:
+          error:
+            type: string
+          document:
+            type: object
+    refusal_reason:
+      description: Motif du refus de l'import ; le catalogue est conservé
+      type: string
 
 movie:
   type: object
   additionalProperties: false
-  required: [_id, title, file_name, date_added, size]
+  required: [_id, title, file_name, date_added, size, themoviedb_id]
   properties:
     _id:
-      description: identifiant du film
+      description: Identifiant TMDB du film, identique à themoviedb_id
       type: string
     title:
       description: titre du film
@@ -60,6 +72,7 @@ movie:
     themoviedb_id:
       description: identifiant du film sur https://www.themoviedb.org/
       type: string
+      pattern: '^[0-9]+$'
     allocine_id:
       description: identifiant du film sur http://www.allocine.fr/
       type: string
