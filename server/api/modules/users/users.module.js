@@ -5,7 +5,7 @@ const express = require("express");
 const { sendUsersListWithPagination } = require("./users.middleware");
 
 const authorizedRoutes = {
-	admin: [ "/?", "/[^/]+" ],
+	admin: [ "/?", "/[^/]+", "/index/rebuild" ],
 	all: [ "/me", "/[^/]+/avatar" ],
 };
 
@@ -13,12 +13,20 @@ function routerFactory({ usersStore }) {
 	// eslint-disable-next-line new-cap
 	const router = express.Router();
 
-	router.get("/me", (request, response, next) => {
-		const loginUser = usersStore.loginUser;
-		if (loginUser === null) {
-			return next(new Error("GET /me, loginUser not set"));
+	router.post("/index/rebuild", (request, response, next) => usersStore.rebuildLoginIndex()
+		.then((result) => response.status(200).json(result))
+		.catch(next),
+	);
+
+	router.get("/me", (request, response) => {
+		const user = usersStore.getUserByUuid({ uuid: request.auth.uuid });
+		if (user === null) {
+			return response.status(401).json({
+				status: 401,
+				error_description: "Unauthorized",
+			});
 		}
-		response.status(200).json(loginUser.jsonPublic);
+		response.status(200).json(user.jsonPublic);
 	});
 
 	router.get("/", sendUsersListWithPagination({ usersStore }));

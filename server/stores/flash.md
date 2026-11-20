@@ -1,14 +1,12 @@
 # Filmotheque
 
-## nouvelle version 1.4.x
+## Nouvelle version 1.5.0
 
-Cette nouvelle version apporte :
+Cette version modernise le stockage des films et des comptes :
 
-* Modification de la page de chargement
-* La mise en place de la documentation (openapi) de l'api
-* La déconnexion de l'utilisateur
-* le profile : une nouvelle icône apparaît en haut à droite et représente l'utilisateur connecté. depuis cette icône, on peut se déconnecter, consulter la documentation api ou revoir la page flash (à propos)
-* La gestion des utilisateurs (accessible que par moi)
+* Les films et les comptes sont désormais conservés dans LMDB, une base de données embarquée
+* La recherche, le tri et la consultation des films conservent leur fonctionnement actuel
+* Les liens de téléchargement utilisent maintenant l'identifiant TMDB du film : les anciens liens enregistrés doivent être remplacés
 
 Pour plus d'information voir le [Changelog](#Changelog)
 
@@ -55,6 +53,17 @@ Si vous avez d'autres idées d'évolution, n'hésitez pas à m'en faire part.
 Pour ceux que ça intéresse les sources sont sur [github](https://github.com/sergebesson/filmotheque)
 
 ## Changelog <a id="Changelog"></a>
+
+### 1.5.0
+
+* Remplacement du stockage JSON des films et des comptes par LMDB
+* Migration des comptes par un outil explicite, sans modification des fichiers JSON d'origine
+* Au premier démarrage sur une nouvelle base, catalogue vide puis import manuel des films par l'administrateur ; aucun import automatique
+* Import complet et atomique : identifiant TMDB obligatoire, doublons signalés et catalogue conservé si aucun film valide n'est trouvé
+* Identité stable des comptes par UUID, index des logins et outils de reconstruction de cet index
+* Correction de l'isolation de l'identité et des droits entre requêtes simultanées
+* Documentation de la sauvegarde, de la restauration et du retour au stockage JSON ; tests de migration et de reprise renforcés
+* Mise à jour des dépendances et installation automatique des dépendances du client depuis la racine du projet
 
 ### 1.4.15
 

@@ -70,10 +70,10 @@ class ModulesService {
 
 	updateRouter({ modules, router, context }) {
 		router.use((request, response, next) => {
-			const loginUser = context.usersStore.loginUser;
+			const loginUser = context.usersStore.getUserByName({ name: request.auth.user });
 			if (
 				this.routeAccessRights.all.some((routeRegExp) => routeRegExp.test(request.path)) ||
-				(loginUser.isAdmin && this.routeAccessRights.admin
+				(loginUser?.isAdmin && this.routeAccessRights.admin
 					.some((routeRegExp) => routeRegExp.test(request.path)))
 			) {
 				return next();

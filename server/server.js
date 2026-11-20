@@ -13,6 +13,7 @@ const path = require("path");
 
 const { LoadConfiguration } = require("./services/load-configuration.js");
 const { Logger } = require("./services/logger.js");
+const { Database } = require("./services/database.js");
 
 const { publicRouterFactory } = require("./public/public.js");
 const { authentificationRouterFactory } = require("./authentification/authentification.js");
@@ -23,10 +24,14 @@ class Server {
 
 	static async createServerAndStart(configurationFile) {
 		const server = new Server();
-		await server.initialize(configurationFile);
-		await server.start();
-
-		return server;
+		try {
+			await server.initialize(configurationFile);
+			await server.start();
+			return server;
+		} catch (error) {
+			await server.close();
+			throw error;
+		}
 	}
 
 	constructor() {
@@ -34,31 +39,38 @@ class Server {
 		this.configuration = null;
 		this.app = express();
 		this.server = null;
-		this.isStarting = false;
-		this.isStopping = false;
+		this.context = null;
+		this.closing = null;
+		this.startPromise = null;
+		this.stopPromise = null;
 		this.handleExitSignalBind = () => this.handleExitSignal();
 		this.handleReloadSignalBind = () => this.handleReloadSignal();
 	}
 
 	async initialize(configurationFile) {
 		const context = await Server.initializeContext({ configurationFile });
-
+		this.context = context;
 		this.logger = context.logger;
 		this.configuration = context.configLoader.getValue("server");
 
-		this.app.use(compression());
-		this.app.use((request, response, next) =>
-			this.checkUrlServerMiddleware(request, response, next));
-		const clientDirectory = path.join(__dirname, "../www/dist");
-		this.app.use(favicon(path.join(clientDirectory, "filmotheque.ico")));
-		this.app.use(publicRouterFactory(context));
-		this.app.use(await authentificationRouterFactory(context));
-		this.app.use(staticRouterFactory(context, clientDirectory));
-		this.app.use("/api", await apiRouterFactory(context));
+		try {
+			this.app.use(compression());
+			this.app.use((request, response, next) =>
+				this.checkUrlServerMiddleware(request, response, next));
+			const clientDirectory = path.join(__dirname, "../www/dist");
+			this.app.use(favicon(path.join(clientDirectory, "filmotheque.ico")));
+			this.app.use(publicRouterFactory(context));
+			this.app.use(await authentificationRouterFactory(context));
+			this.app.use(staticRouterFactory(context, clientDirectory));
+			this.app.use("/api", await apiRouterFactory(context));
 
-		// Route d'erreur
-		this.app.use((error, request, response, next) =>
-			this.errorMiddleware(error, request, response, next));
+			// Route d'erreur
+			this.app.use((error, request, response, next) =>
+				this.errorMiddleware(error, request, response, next));
+		} catch (error) {
+			await this.close();
+			throw error;
+		}
 	}
 
 	static async initializeContext({ configurationFile }) {
@@ -71,17 +83,28 @@ class Server {
 		const context = {
 			configLoader,
 			logger,
+			database: await Database.open({ configLoader }),
 		};
 
-		const stores = await requireGlob("stores/*.store.js");
-		await Promise.all(_.map(stores, async(store, storeName) => {
-			context[storeName] = new store[
-				storeName.charAt(0).toUpperCase() + storeName.slice(1)
-			](context);
-			return await context[storeName].initialize();
-		}));
-
-		return context;
+		try {
+			const stores = await requireGlob("stores/*.store.js", { cwd: __dirname });
+			const instances = _.map(stores, (store, storeName) => {
+				context[storeName] = new store[
+					storeName.charAt(0).toUpperCase() + storeName.slice(1)
+				](context);
+				return context[storeName];
+			});
+			const results = await Promise.allSettled(instances
+				.map(async(store) => store.initialize()));
+			const failure = results.find((result) => result.status === "rejected");
+			if (failure) {
+				throw failure.reason;
+			}
+			return context;
+		} catch (error) {
+			await context.database.close();
+			throw error;
+		}
 	}
 
 	checkUrlServerMiddleware(request, response, next) {
@@ -111,25 +134,28 @@ class Server {
 	}
 
 	start() {
-		if (this.isStarting || this.isStopping) {
+		if (this.closing) {
+			return Promise.reject(new Error("Server is closed"));
+		}
+		if (this.startPromise) {
+			return this.startPromise;
+		}
+		if (this.stopPromise) {
 			console.log();
-			console.log(this.isStarting ? "Server already starting" : "Server is shutting down");
-			return;
+			return Promise.reject(new Error("Server is shutting down"));
 		}
 
-		this.isStarting = true;
 		console.log();
 		console.log("Server starting ...");
-		this.server = this.configuration.ssl.enable ?
-			https.createServer({
-				/* eslint-disable-next-line no-sync */
-				key: fs.readFileSync(this.configuration.ssl.keyFile),
-				/* eslint-disable-next-line no-sync */
-				cert: fs.readFileSync(this.configuration.ssl.certFile),
-			}, this.app) :
-			http.createServer(this.app);
-
-		return new Promise((resolve, reject) => {
+		this.startPromise = new Promise((resolve, reject) => {
+			this.server = this.configuration.ssl.enable ?
+				https.createServer({
+					/* eslint-disable-next-line no-sync */
+					key: fs.readFileSync(this.configuration.ssl.keyFile),
+					/* eslint-disable-next-line no-sync */
+					cert: fs.readFileSync(this.configuration.ssl.certFile),
+				}, this.app) :
+				http.createServer(this.app);
 			this.server.on("error", (error) => {
 				const messageError = `impossible server start : ${error.message}`;
 				console.log(messageError);
@@ -153,9 +179,11 @@ class Server {
 					this.configuration.port
 				}/`);
 
-				process.on("SIGINT", this.handleExitSignalBind);
-				process.on("SIGTERM", this.handleExitSignalBind);
-				process.on("SIGUSR1", this.handleReloadSignalBind);
+				if (!process.listeners("SIGINT").includes(this.handleExitSignalBind)) {
+					process.on("SIGINT", this.handleExitSignalBind);
+					process.on("SIGTERM", this.handleExitSignalBind);
+					process.on("SIGUSR1", this.handleReloadSignalBind);
+				}
 
 				resolve();
 			});
@@ -164,20 +192,22 @@ class Server {
 				host: this.configuration.host,
 			});
 		}).finally(() => {
-			this.isStarting = false;
+			this.startPromise = null;
 		});
-
+		return this.startPromise;
 	}
 
 	stop() {
-		if (this.isStarting || this.isStopping) {
-			console.log();
-			console.log(this.isStopping ? "Server already stopping" : "Server is starting");
-			return;
+		if (this.stopPromise) {
+			return this.stopPromise;
+		}
+		if (this.startPromise) {
+			return this.startPromise.then(() => this.stop(), () => this.stop());
 		}
 		console.log(); console.log("Server stopping ...");
-		if (!this.server) {
-			return Promise.reject(new Error("Server not running"));
+		if (!this.server?.listening) {
+			this.server = null;
+			return Promise.resolve();
 		}
 
 		const timeoutCloseAllConnection = setTimeout(() => {
@@ -185,8 +215,7 @@ class Server {
 			this.server?.closeAllConnections();
 		}, this.configuration.closeTimeoutInMin * 60 * 1000);
 
-		this.isStopping = true;
-		return new Promise((resolve, reject) => {
+		this.stopPromise = new Promise((resolve, reject) => {
 			this.server.on("error", (error) => {
 				const messageError = `Server not closed : ${error.message}`;
 				console.log(messageError);
@@ -197,23 +226,40 @@ class Server {
 				console.log("Server stopped");
 				this.logger.log("info", "Server is closed");
 				this.server = null;
-				process.removeListener("SIGINT", this.handleExitSignalBind);
-				process.removeListener("SIGTERM", this.handleExitSignalBind);
-				process.removeListener("SIGUSR1", this.handleReloadSignalBind);
 				resolve();
 			});
 			this.server.closeIdleConnections();
 			this.server.close();
 		}).finally(() => {
 			clearTimeout(timeoutCloseAllConnection);
-			this.isStopping = false;
+			this.stopPromise = null;
 		});
+		return this.stopPromise;
+	}
+
+	close() {
+		if (!this.closing) {
+			this.closing = (async() => {
+				try {
+					await this.stop();
+				} finally {
+					try {
+						await this.context?.database.close();
+					} finally {
+						process.removeListener("SIGINT", this.handleExitSignalBind);
+						process.removeListener("SIGTERM", this.handleExitSignalBind);
+						process.removeListener("SIGUSR1", this.handleReloadSignalBind);
+					}
+				}
+			})();
+		}
+		return this.closing;
 	}
 
 	async handleExitSignal() {
 		console.log(); console.log("Exit Signal receive");
 		try {
-			await this.stop();
+			await this.close();
 			process.exitCode = 0;
 		} catch (error) {
 			console.log(`impossible server stop : ${error.message}`);
@@ -227,12 +273,13 @@ class Server {
 		try {
 			console.log(); console.log("Reload Signal receive");
 			await this.stop();
-			await this.start();
+			if (!this.closing) {
+				await this.start();
+			}
 		} catch (error) {
 			console.log(`impossible server stop or start : ${error.message}`);
+			await this.handleExitSignal();
 			process.exitCode = 1;
-			// eslint-disable-next-line no-process-exit
-			setTimeout(() => process.exit(1), 1000);
 		}
 	}
 }
